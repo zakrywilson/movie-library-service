@@ -1,17 +1,31 @@
 version: '3.1'
+
 services:
   database:
     image: mariadb
     restart: always
     env_file:
       - .env
-
+    ports:
+      - "3306:3306"
+    networks:
+      backend:
+        aliases:
+          - database
+          - mariadb
   server:
     build: server
     image: zakrywilson/dvd_library_service
-    ports:
-      - "8080:8080"
     env_file:
       - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+      - frontend
     links:
       - database
+
+networks:
+  backend:
+  frontend:
