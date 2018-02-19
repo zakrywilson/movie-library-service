@@ -1,0 +1,46 @@
+# Ignore #
+
+# Intellij #
+.idea
+*.iml
+
+# Docker
+.env
+
+# Logs #
+*.log
+log4j.properties
+
+# Maven #
+target/
+
+# VIM #
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+Session.vim
+.netrwhist
+*~
+tags
+
+# Linux #
+.fuse_hidden*
+.directory
+.Trash-*
+
+# OSX #
+*.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows #
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
