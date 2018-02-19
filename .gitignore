@@ -4,10 +4,10 @@
 .idea
 *.iml
 
-# Docker
+# Docker #
 .env
 
-# Logs #
+# Logging #
 *.log
 log4j.properties
 
