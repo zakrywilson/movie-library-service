@@ -4,12 +4,42 @@
 .idea
 *.iml
 
+# Eclipse #
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.externalToolBuilders/
+*.launch
+.classpath
+.factorypath
+.target
+.springBeans
+.recommenders/
+
+# Netbeans #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+
 # Docker #
 .env
 
 # Logging #
 *.log
 log4j.properties
+logging.properties
 
 # Maven #
 target/
