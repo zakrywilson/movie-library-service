@@ -57,6 +57,24 @@
           <excludeDevtools>false</excludeDevtools>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.dkanejs.maven.plugins</groupId>
+        <artifactId>docker-compose-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <id>up</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>up</goal>
+            </goals>
+            <configuration>
+              <composeFile>${project.basedir}/../docker-compose.yml</composeFile>
+              <detachedMode>false</detachedMode>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <finalName>${project.artifactId}</finalName>
   </build>
