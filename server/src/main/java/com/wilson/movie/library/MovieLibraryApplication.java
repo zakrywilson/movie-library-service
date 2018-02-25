@@ -1,4 +1,4 @@
-package com.wilson.dvd.library;
+package com.wilson.movie.library;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Zach Wilson
  */
 @SpringBootApplication
-public class DvdLibraryApplication {
+public class MovieLibraryApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DvdLibraryApplication.class, args);
+        SpringApplication.run(MovieLibraryApplication.class, args);
     }
 
 }

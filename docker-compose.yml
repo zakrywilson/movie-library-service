@@ -15,7 +15,7 @@ services:
           - mariadb
   server:
     build: server
-    image: zakrywilson/dvd_library_service
+    image: zakrywilson/movie_library_service
     env_file:
       - .env
     ports:
