@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @JsonRootName("movie")
 @Value
 @Builder
-public class Movie {
+public final class Movie {
 
     @JsonProperty("title")
     @Wither
