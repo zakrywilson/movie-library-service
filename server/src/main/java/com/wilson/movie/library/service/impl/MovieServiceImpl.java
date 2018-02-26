@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieEntity getByTitle(@Nonnull String title) {
         log.trace("Getting movie by title: \"{}\"", title);
 
-        return repository.findByTitleIsLike(title);
+        return repository.findByTitle(title);
     }
 
     @Override
@@ -147,12 +148,10 @@ public class MovieServiceImpl implements MovieService {
             log.trace("Deleting all movies by IDs: {}", Arrays.toString(ids.toArray()));
         }
 
-        Set<Integer> deletedEntityIds = repository.findAllById(ids)
-                .stream()
-                .map(MovieEntity::getId)
-                .collect(Collectors.toSet());
+        Collection<MovieEntity> movies = repository.findAllById(ids);
+        repository.deleteInBatch(movies);
 
-        repository.deleteAllById(deletedEntityIds);
+        Set<Integer> deletedEntityIds = movies.stream().map(MovieEntity::getId).collect(Collectors.toSet());
         if (log.isDebugEnabled()) {
             log.debug("Deleted movies with IDs: {}", Arrays.toString(deletedEntityIds.toArray()));
         }
@@ -166,12 +165,10 @@ public class MovieServiceImpl implements MovieService {
     public Collection<Integer> deleteAll() {
         log.trace("Deleting all movies");
 
-        Set<Integer> deletedMovieIds = repository.findAll()
-                .stream()
-                .map(MovieEntity::getId)
-                .collect(Collectors.toSet());
+        List<MovieEntity> movies = repository.findAll();
+        repository.deleteInBatch(movies);
 
-        repository.deleteAllById(deletedMovieIds);
+        Set<Integer> deletedMovieIds = movies.stream().map(MovieEntity::getId).collect(Collectors.toSet());
         if (log.isDebugEnabled()) {
             log.debug("Deleted all movies with IDs: {}", Arrays.toString(deletedMovieIds.toArray()));
         }
