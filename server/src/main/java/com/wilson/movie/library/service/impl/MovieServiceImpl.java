@@ -34,7 +34,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public MovieEntity create(@Nonnull MovieEntity movie) {
         log.trace("Creating movie: {}", movie);
 
@@ -46,7 +45,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public MovieEntity getById(@Nonnull Integer id) {
         log.trace("Getting movie by ID: {}", id);
 
@@ -55,7 +53,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public MovieEntity getByTitle(@Nonnull String title) {
         log.trace("Getting movie by title: \"{}\"", title);
 
@@ -64,7 +61,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public Collection<MovieEntity> getAllByReleaseDate(@Nonnull LocalDate releaseDate) {
         log.trace("Getting all movies by release date: {}", releaseDate);
 
@@ -73,7 +69,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public Collection<MovieEntity> getAllByReleaseDate(@Nonnull Integer releaseDateEpochDay) {
         LocalDate releaseDate = LocalDate.ofEpochDay(releaseDateEpochDay);
 
@@ -84,7 +79,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public Collection<MovieEntity> getAllByStudio(@Nonnull String studio) {
         log.trace("Getting all movies by studio: \"{}\"", studio);
 
@@ -93,7 +87,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public Collection<MovieEntity> getAllById(Collection<Integer> ids) {
         if (log.isTraceEnabled()) {
             log.trace("Getting all movies by IDs: {}", Arrays.toString(ids.toArray()));
@@ -104,7 +97,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public Collection<MovieEntity> getAll() {
         log.trace("Getting all movies");
 
@@ -136,7 +128,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    @Transactional
     public Integer deleteById(@Nonnull Integer id) {
         log.trace("Deleting movie by ID: {}", id);
 
@@ -189,7 +180,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Transactional
     public boolean exists(@Nonnull Integer id) {
         log.trace("Checking if movie exists with ID: {}", id);
 
@@ -197,7 +187,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Transactional
     public boolean exists(@Nonnull String title) {
         log.trace("Checking if movie exists with title: \"{}\"", title);
 
