@@ -3,7 +3,10 @@ package com.wilson.movie.library.resource.utils;
 import com.wilson.movie.library.domain.MovieEntity;
 import com.wilson.movie.library.resource.model.Movie;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Adapts shared DTO (data transfer objects) to local JPA entities.
@@ -35,7 +38,7 @@ public final class Adapters {
     }
 
     @Nullable
-    public static MovieEntity toMovie(@Nullable Movie movie) {
+    public static MovieEntity toMovieEntity(@Nullable Movie movie) {
         if (movie == null) {
             return null;
         }
@@ -45,6 +48,16 @@ public final class Adapters {
                                movie.getStudio(),
                                movie.getPlotSummary(),
                                movie.getNotes());
+    }
+
+    @Nonnull
+    public static Collection<Movie> toMovies(@Nonnull Collection<MovieEntity> movies) {
+        return movies.stream().map(Adapters::toMovie).collect(Collectors.toList());
+    }
+
+    @Nonnull
+    public static Collection<MovieEntity> toMovieEntities(@Nonnull Collection<Movie> movies) {
+        return movies.stream().map(Adapters::toMovieEntity).collect(Collectors.toList());
     }
 
 }

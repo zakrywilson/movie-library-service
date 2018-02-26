@@ -1,7 +1,6 @@
 package com.wilson.movie.library.resource;
 
 import com.wilson.movie.library.resource.model.Movie;
-import com.wilson.movie.library.resource.utils.Adapters;
 import com.wilson.movie.library.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
+import static com.wilson.movie.library.resource.utils.Adapters.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -37,14 +37,14 @@ public class MovieResource {
     public ResponseEntity<?> create(@RequestBody Movie movie) {
         log.trace("Received request to create movie: {}", movie);
 
-        return new ResponseEntity<>(service.create(Adapters.toMovie(movie)), HttpStatus.CREATED);
+        return new ResponseEntity<>(toMovie(service.create(toMovieEntity(movie))), HttpStatus.CREATED);
     }
 
     @RequestMapping(method = GET, params = "title")
     public ResponseEntity<?> getByTitle(@RequestParam("title") String title) {
         log.trace("Received request to get movie by title: \"{}\"", title);
 
-        return new ResponseEntity<>(service.getByTitle(title), HttpStatus.OK);
+        return new ResponseEntity<>(toMovie(service.getByTitle(title)), HttpStatus.OK);
     }
 
     @RequestMapping(method = GET, params = "release-date")
@@ -54,28 +54,28 @@ public class MovieResource {
                       releaseDateEpochDay != null ? LocalDate.ofEpochDay(releaseDateEpochDay) : null);
         }
 
-        return new ResponseEntity<>(service.getAllByReleaseDate(releaseDateEpochDay), HttpStatus.OK);
+        return new ResponseEntity<>(toMovies(service.getAllByReleaseDate(releaseDateEpochDay)), HttpStatus.OK);
     }
 
     @RequestMapping(method = GET, params = "studio")
     public ResponseEntity<?> getAllByStudio(@RequestParam("studio") String studio) {
         log.trace("Received request to get all movies by studio: \"{}\"", studio);
 
-        return new ResponseEntity<>(service.getAllByStudio(studio), HttpStatus.OK);
+        return new ResponseEntity<>(toMovies(service.getAllByStudio(studio)), HttpStatus.OK);
     }
 
     @RequestMapping(method = GET)
     public ResponseEntity<?> getAll() {
         log.trace("Received request to get all movies");
 
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(toMovies(service.getAll()), HttpStatus.OK);
     }
 
     @RequestMapping(method = PUT, params = "id")
     public ResponseEntity<?> update(@RequestParam("id") Integer id, @RequestBody Movie movie) {
         log.trace("Received request to update movie with ID {}: {}", id, movie);
 
-        return new ResponseEntity<>(service.update(id, Adapters.toMovie(movie)), HttpStatus.OK);
+        return new ResponseEntity<>(toMovie(service.update(id, toMovieEntity(movie))), HttpStatus.OK);
     }
 
     @RequestMapping(method = DELETE)
