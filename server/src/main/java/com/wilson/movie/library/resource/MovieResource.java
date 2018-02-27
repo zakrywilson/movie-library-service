@@ -48,6 +48,13 @@ public class MovieResource {
                 .build();
     }
 
+    @RequestMapping(method = GET, value = "/{id}")
+    public Movie getById(@PathVariable("id") Integer id) {
+        log.trace("Received request to get movie by ID: {}", id);
+
+        return toMovie(service.getById(id));
+    }
+
     @RequestMapping(method = GET, params = "title")
     public Movie getByTitle(@RequestParam("title") String title) {
         log.trace("Received request to get movie by title: \"{}\"", title);
