@@ -1,5 +1,4 @@
 # Movie Library Service
-## Author
 
 ## Getting Started
 
@@ -8,6 +7,8 @@
 * Java 8  
 * Maven 3  
 * Docker  
+
+## Author
 
 **Zach Wilson**  
 Email: zakrywilson@gmail.com  
