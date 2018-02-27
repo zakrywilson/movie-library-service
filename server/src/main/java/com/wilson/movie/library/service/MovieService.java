@@ -25,7 +25,7 @@ public interface MovieService {
     MovieEntity update(Integer id, MovieEntity movie);
 
     Integer deleteById(Integer id);
-    Collection<Integer> deleteAllById(Collection<Integer> ids);
+    Collection<Integer> deleteAllWithIds(Collection<Integer> ids);
     Collection<Integer> deleteAll();
 
     boolean exists(Integer id);

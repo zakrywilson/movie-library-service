@@ -111,7 +111,7 @@ public class MovieResource {
     public ResponseEntity<Void> deleteAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
         log.trace("Received request to delete all movies with IDs: {}", ids);
 
-        service.deleteAllById(ids);
+        service.deleteAllWithIds(ids);
 
         return ResponseEntity.noContent().build();
     }
