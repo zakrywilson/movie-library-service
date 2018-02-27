@@ -19,7 +19,7 @@ public interface MovieService {
     Collection<MovieEntity> getAllByReleaseDate(LocalDate releaseDate);
     Collection<MovieEntity> getAllByReleaseDate(Integer releaseDateEpochDay);
     Collection<MovieEntity> getAllByStudio(String studio);
-    Collection<MovieEntity> getAllById(Collection<Integer> ids);
+    Collection<MovieEntity> getAllWithIds(Collection<Integer> ids);
     Collection<MovieEntity> getAll();
 
     MovieEntity update(Integer id, MovieEntity movie);
