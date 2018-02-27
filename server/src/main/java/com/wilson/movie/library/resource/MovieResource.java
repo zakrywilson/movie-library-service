@@ -98,6 +98,15 @@ public class MovieResource {
         return ResponseEntity.noContent().build();
     }
 
+    @RequestMapping(method = DELETE, value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
+        log.trace("Received request to delete movie by ID: {}", id);
+
+        service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @RequestMapping(method = DELETE)
     public ResponseEntity<Void> deleteAll() {
         log.trace("Received request to delete all movies");
