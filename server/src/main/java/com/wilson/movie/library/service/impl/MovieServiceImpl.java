@@ -88,7 +88,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    public Collection<MovieEntity> getAllById(Collection<Integer> ids) {
+    public Collection<MovieEntity> getAllById(@Nonnull Collection<Integer> ids) {
         if (log.isTraceEnabled()) {
             log.trace("Getting all movies by IDs: {}", Arrays.toString(ids.toArray()));
         }
@@ -143,7 +143,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Nonnull
     @Transactional
-    public Collection<Integer> deleteAllWithIds(Collection<Integer> ids) {
+    public Collection<Integer> deleteAllWithIds(@Nonnull Collection<Integer> ids) {
         if (log.isTraceEnabled()) {
             log.trace("Deleting all movies by IDs: {}", Arrays.toString(ids.toArray()));
         }
