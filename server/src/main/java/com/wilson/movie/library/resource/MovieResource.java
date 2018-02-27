@@ -1,17 +1,17 @@
 package com.wilson.movie.library.resource;
 
+import com.wilson.movie.library.domain.MovieEntity;
 import com.wilson.movie.library.resource.model.Movie;
 import com.wilson.movie.library.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 import static com.wilson.movie.library.resource.utils.Adapters.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -37,7 +37,15 @@ public class MovieResource {
     public ResponseEntity<?> create(@RequestBody Movie movie) {
         log.trace("Received request to create movie: {}", movie);
 
-        return new ResponseEntity<>(toMovie(service.create(toMovieEntity(movie))), HttpStatus.CREATED);
+        MovieEntity createdMovie = service.create(toMovieEntity(movie));
+
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(createdMovie.getId())
+                        .toUri())
+                .build();
     }
 
     @RequestMapping(method = GET, params = "title")
