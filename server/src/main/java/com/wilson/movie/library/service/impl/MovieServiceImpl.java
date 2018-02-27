@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -89,9 +88,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Nonnull
     public Collection<MovieEntity> getAllWithIds(@Nonnull Collection<Integer> ids) {
-        if (log.isTraceEnabled()) {
-            log.trace("Getting all movies by IDs: {}", Arrays.toString(ids.toArray()));
-        }
+        log.trace("Getting all movies by IDs: {}", ids);
 
         return repository.findAllById(ids);
     }
@@ -144,17 +141,13 @@ public class MovieServiceImpl implements MovieService {
     @Nonnull
     @Transactional
     public Collection<Integer> deleteAllWithIds(@Nonnull Collection<Integer> ids) {
-        if (log.isTraceEnabled()) {
-            log.trace("Deleting all movies by IDs: {}", Arrays.toString(ids.toArray()));
-        }
+        log.trace("Deleting all movies by IDs: {}", ids);
 
         Collection<MovieEntity> movies = repository.findAllById(ids);
         repository.deleteInBatch(movies);
 
         Set<Integer> deletedEntityIds = movies.stream().map(MovieEntity::getId).collect(Collectors.toSet());
-        if (log.isDebugEnabled()) {
-            log.debug("Deleted movies with IDs: {}", Arrays.toString(deletedEntityIds.toArray()));
-        }
+        log.debug("Deleted movies with IDs: {}", deletedEntityIds);
 
         return deletedEntityIds;
     }
@@ -169,9 +162,7 @@ public class MovieServiceImpl implements MovieService {
         repository.deleteInBatch(movies);
 
         Set<Integer> deletedMovieIds = movies.stream().map(MovieEntity::getId).collect(Collectors.toSet());
-        if (log.isDebugEnabled()) {
-            log.debug("Deleted all movies with IDs: {}", Arrays.toString(deletedMovieIds.toArray()));
-        }
+        log.debug("Deleted all movies with IDs: {}", deletedMovieIds);
 
         return deletedMovieIds;
     }
