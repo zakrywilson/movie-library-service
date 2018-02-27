@@ -107,6 +107,15 @@ public class MovieResource {
         return ResponseEntity.noContent().build();
     }
 
+    @RequestMapping(method = DELETE, params = "ids")
+    public ResponseEntity<Void> deleteAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
+        log.trace("Received request to delete all movies with IDs: {}", ids);
+
+        service.deleteAllById(ids);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @RequestMapping(method = DELETE)
     public ResponseEntity<Void> deleteAll() {
         log.trace("Received request to delete all movies");
