@@ -49,53 +49,58 @@ public class MovieResource {
     }
 
     @RequestMapping(method = GET, params = "title")
-    public ResponseEntity<?> getByTitle(@RequestParam("title") String title) {
+    public Movie getByTitle(@RequestParam("title") String title) {
         log.trace("Received request to get movie by title: \"{}\"", title);
 
-        return new ResponseEntity<>(toMovie(service.getByTitle(title)), HttpStatus.OK);
+        return toMovie(service.getByTitle(title));
     }
 
     @RequestMapping(method = GET, params = "release-date")
-    public ResponseEntity<?> getAllByReleaseDate(@RequestParam("release-date") Integer releaseDateEpochDay) {
+    public Collection<Movie> getAllByReleaseDate(@RequestParam("release-date") Integer releaseDateEpochDay) {
         if (log.isTraceEnabled()) {
             log.trace("Received request to get all movies by release date: {}",
                       releaseDateEpochDay != null ? LocalDate.ofEpochDay(releaseDateEpochDay) : null);
         }
 
-        return new ResponseEntity<>(toMovies(service.getAllByReleaseDate(releaseDateEpochDay)), HttpStatus.OK);
+        return toMovies(service.getAllByReleaseDate(releaseDateEpochDay));
     }
 
     @RequestMapping(method = GET, params = "studio")
-    public ResponseEntity<?> getAllByStudio(@RequestParam("studio") String studio) {
+    public Collection<Movie> getAllByStudio(@RequestParam("studio") String studio) {
         log.trace("Received request to get all movies by studio: \"{}\"", studio);
 
-        return new ResponseEntity<>(toMovies(service.getAllByStudio(studio)), HttpStatus.OK);
+        return toMovies(service.getAllByStudio(studio));
     }
 
     @RequestMapping(method = GET)
-    public ResponseEntity<?> getAll() {
+    public Collection<Movie> getAll() {
         log.trace("Received request to get all movies");
 
-        return new ResponseEntity<>(toMovies(service.getAll()), HttpStatus.OK);
+        return toMovies(service.getAll());
     }
 
-    @RequestMapping(method = PUT, params = "id")
-    public ResponseEntity<?> update(@RequestParam("id") Integer id, @RequestBody Movie movie) {
+    @RequestMapping(method = PUT, value = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody Movie movie) {
         log.trace("Received request to update movie with ID {}: {}", id, movie);
 
-        return new ResponseEntity<>(toMovie(service.update(id, toMovieEntity(movie))), HttpStatus.OK);
+        if (!service.exists(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        service.update(id, toMovieEntity(movie));
+        return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(method = DELETE)
-    public ResponseEntity<?> deleteAll() {
+    public ResponseEntity<Void> deleteAll() {
         log.trace("Received request to delete all movies");
 
         service.deleteAll();
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(method = GET, params = "title-exists")
-    public ResponseEntity<?> exists(@RequestParam("title-exists") String title) {
+    public ResponseEntity<Void> exists(@RequestParam("title-exists") String title) {
         log.trace("Received request to check if movie exists with title: \"{}\"", title);
 
         return new ResponseEntity<>(service.exists(title) ? HttpStatus.FOUND : HttpStatus.NOT_FOUND);
