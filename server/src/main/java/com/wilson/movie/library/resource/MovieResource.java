@@ -55,6 +55,13 @@ public class MovieResource {
         return toMovie(service.getById(id));
     }
 
+    @RequestMapping(method = GET, params = "ids")
+    public Collection<Movie> getAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
+        log.trace("Received request to get all movies with IDs: {}", ids);
+
+        return toMovies(service.getAllWithIds(ids));
+    }
+
     @RequestMapping(method = GET, params = "title")
     public Movie getByTitle(@RequestParam("title") String title) {
         log.trace("Received request to get movie by title: \"{}\"", title);
