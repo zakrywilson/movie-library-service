@@ -18,6 +18,10 @@ import java.time.LocalDate;
 @Builder
 public final class Movie {
 
+    @JsonProperty("id")
+    @Wither
+    private final int id;
+
     @JsonProperty("title")
     @Wither
     private final String title;

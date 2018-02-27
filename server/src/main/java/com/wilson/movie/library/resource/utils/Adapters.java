@@ -29,6 +29,7 @@ public final class Adapters {
         }
 
         return Movie.builder()
+                .id(movie.getId())
                 .title(movie.getTitle())
                 .releaseDate(movie.getReleaseDate())
                 .studio(movie.getStudio())
