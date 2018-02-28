@@ -109,9 +109,9 @@ public class MovieServiceImplTest {
         LocalDate releaseDate = LocalDate.now();
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity movie = generateRandomMovie();
-            movie.setReleaseDate(releaseDate);
-            expectedEntities.add(movie);
+            MovieEntity entity = generateRandomMovie();
+            entity.setReleaseDate(releaseDate);
+            expectedEntities.add(entity);
         }
 
         Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(expectedEntities);
@@ -146,9 +146,9 @@ public class MovieServiceImplTest {
         LocalDate releaseDate = LocalDate.now();
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity movie = generateRandomMovie();
-            movie.setReleaseDate(LocalDate.ofEpochDay(releaseDate.toEpochDay()));
-            expectedEntities.add(movie);
+            MovieEntity entity = generateRandomMovie();
+            entity.setReleaseDate(LocalDate.ofEpochDay(releaseDate.toEpochDay()));
+            expectedEntities.add(entity);
         }
 
         Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(expectedEntities);
@@ -183,9 +183,9 @@ public class MovieServiceImplTest {
         String studio = generateRandomStudio();
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity movie = generateRandomMovie();
-            movie.setStudio(studio);
-            expectedEntities.add(movie);
+            MovieEntity entity = generateRandomMovie();
+            entity.setStudio(studio);
+            expectedEntities.add(entity);
         }
 
         Mockito.when(repository.findAllByStudio(studio)).thenReturn(expectedEntities);
@@ -218,14 +218,11 @@ public class MovieServiceImplTest {
     @Test
     public void getAllWithIds() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            ids.add(generateRandomId());
-        }
-
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
-            MovieEntity movie = generateRandomMovie();
-            expectedEntities.add(movie);
+            MovieEntity entity = generateRandomMovie();
+            expectedEntities.add(entity);
+            ids.add(entity.getId());
         }
 
         Mockito.when(repository.findAllById(ids)).thenReturn(expectedEntities);
@@ -262,8 +259,7 @@ public class MovieServiceImplTest {
     public void getAll() {
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity movie = generateRandomMovie();
-            expectedEntities.add(movie);
+            expectedEntities.add(generateRandomMovie());
         }
 
         Mockito.when(repository.findAll()).thenReturn(expectedEntities);
