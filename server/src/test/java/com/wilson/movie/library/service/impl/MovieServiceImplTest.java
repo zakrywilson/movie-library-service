@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -48,14 +49,14 @@ public class MovieServiceImplTest {
     @Test
     public void getById() {
         int id = generateRandomId();
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity expected = generateRandomMovie();
 
-        Mockito.when(repository.findOne(id)).thenReturn(movie);
+        Mockito.when(repository.findOne(id)).thenReturn(expected);
 
         Optional<MovieEntity> optionalEntity = service.getById(id);
 
         assertThat(optionalEntity.isPresent());
-        optionalEntity.ifPresent((m) -> assertMovie(m, movie.getTitle(), movie.getReleaseDate(), movie.getStudio()));
+        optionalEntity.ifPresent((actual) -> assertMovie(actual, expected));
     }
 
     /**
@@ -77,14 +78,14 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getByTitle() {
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity expected = generateRandomMovie();
 
-        Mockito.when(repository.findByTitle(movie.getTitle())).thenReturn(movie);
+        Mockito.when(repository.findByTitle(expected.getTitle())).thenReturn(expected);
 
-        Optional<MovieEntity> optionalEntity = service.getByTitle(movie.getTitle());
+        Optional<MovieEntity> optionalEntity = service.getByTitle(expected.getTitle());
 
         assertThat(optionalEntity.isPresent());
-        optionalEntity.ifPresent((m) -> assertMovie(m, movie.getTitle(), movie.getReleaseDate(), movie.getStudio()));
+        optionalEntity.ifPresent((actual) -> assertMovie(actual, expected));
     }
 
     /**
@@ -107,21 +108,20 @@ public class MovieServiceImplTest {
     @Test
     public void getAllByReleaseDate_withLocalDate() {
         LocalDate releaseDate = LocalDate.now();
-        List<MovieEntity> expectedMovies = new ArrayList<>();
+        List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
             MovieEntity movie = generateRandomMovie();
             movie.setReleaseDate(releaseDate);
-            expectedMovies.add(movie);
+            expectedEntities.add(movie);
         }
 
-        Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(expectedMovies);
+        Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(expectedEntities);
 
-        List<MovieEntity> actualMovies = new ArrayList<>(service.getAllByReleaseDate(releaseDate));
+        List<MovieEntity> actualEntities = new ArrayList<>(service.getAllByReleaseDate(releaseDate));
 
-        assertThat(actualMovies.size()).isEqualTo(expectedMovies.size());
-        for (int i = 0; i < actualMovies.size(); i++) {
-            MovieEntity expected = expectedMovies.get(i);
-            assertMovie(actualMovies.get(i), expected.getTitle(), expected.getReleaseDate(), expected.getStudio());
+        assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
+        for (int i = 0; i < actualEntities.size(); i++) {
+            assertMovie(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
@@ -134,9 +134,9 @@ public class MovieServiceImplTest {
 
         Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(new ArrayList<>());
 
-        Collection<MovieEntity> actualMovies = service.getAllByReleaseDate(releaseDate);
+        Collection<MovieEntity> actualEntities = service.getAllByReleaseDate(releaseDate);
 
-        assertThat(actualMovies.isEmpty()).isTrue();
+        assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
@@ -145,21 +145,20 @@ public class MovieServiceImplTest {
     @Test
     public void getAllByReleaseDate_withIntEpochDay() {
         LocalDate releaseDate = LocalDate.now();
-        List<MovieEntity> expectedMovies = new ArrayList<>();
+        List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
             MovieEntity movie = generateRandomMovie();
             movie.setReleaseDate(LocalDate.ofEpochDay(releaseDate.toEpochDay()));
-            expectedMovies.add(movie);
+            expectedEntities.add(movie);
         }
 
-        Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(expectedMovies);
+        Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(expectedEntities);
 
-        List<MovieEntity> actualMovies = new ArrayList<>(service.getAllByReleaseDate((int) releaseDate.toEpochDay()));
+        List<MovieEntity> actualEntities = new ArrayList<>(service.getAllByReleaseDate((int) releaseDate.toEpochDay()));
 
-        assertThat(actualMovies.size()).isEqualTo(expectedMovies.size());
-        for (int i = 0; i < actualMovies.size(); i++) {
-            MovieEntity expected = expectedMovies.get(i);
-            assertMovie(actualMovies.get(i), expected.getTitle(), expected.getReleaseDate(), expected.getStudio());
+        assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
+        for (int i = 0; i < actualEntities.size(); i++) {
+            assertMovie(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
@@ -172,9 +171,9 @@ public class MovieServiceImplTest {
 
         Mockito.when(repository.findAllByReleaseDate(releaseDate)).thenReturn(new ArrayList<>());
 
-        Collection<MovieEntity> actualMovies = service.getAllByReleaseDate((int) releaseDate.toEpochDay());
+        Collection<MovieEntity> actualEntities = service.getAllByReleaseDate((int) releaseDate.toEpochDay());
 
-        assertThat(actualMovies.isEmpty()).isTrue();
+        assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
@@ -183,21 +182,20 @@ public class MovieServiceImplTest {
     @Test
     public void getAllByStudio() {
         String studio = generateRandomStudio();
-        List<MovieEntity> expectedMovies = new ArrayList<>();
+        List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
             MovieEntity movie = generateRandomMovie();
             movie.setStudio(studio);
-            expectedMovies.add(movie);
+            expectedEntities.add(movie);
         }
 
-        Mockito.when(repository.findAllByStudio(studio)).thenReturn(expectedMovies);
+        Mockito.when(repository.findAllByStudio(studio)).thenReturn(expectedEntities);
 
-        List<MovieEntity> actualMovies = new ArrayList<>(service.getAllByStudio(studio));
+        List<MovieEntity> actualEntities = new ArrayList<>(service.getAllByStudio(studio));
 
-        assertThat(actualMovies.size()).isEqualTo(expectedMovies.size());
-        for (int i = 0; i < actualMovies.size(); i++) {
-            MovieEntity expected = expectedMovies.get(i);
-            assertMovie(actualMovies.get(i), expected.getTitle(), expected.getReleaseDate(), expected.getStudio());
+        assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
+        for (int i = 0; i < actualEntities.size(); i++) {
+            assertMovie(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
@@ -210,9 +208,9 @@ public class MovieServiceImplTest {
 
         Mockito.when(repository.findAllByStudio(studio)).thenReturn(new ArrayList<>());
 
-        Collection<MovieEntity> actualMovies = service.getAllByStudio(studio);
+        Collection<MovieEntity> actualEntities = service.getAllByStudio(studio);
 
-        assertThat(actualMovies.isEmpty()).isTrue();
+        assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
@@ -225,20 +223,19 @@ public class MovieServiceImplTest {
             ids.add(generateRandomId());
         }
 
-        List<MovieEntity> expectedMovies = new ArrayList<>();
+        List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
             MovieEntity movie = generateRandomMovie();
-            expectedMovies.add(movie);
+            expectedEntities.add(movie);
         }
 
-        Mockito.when(repository.findAllById(ids)).thenReturn(expectedMovies);
+        Mockito.when(repository.findAllById(ids)).thenReturn(expectedEntities);
 
-        List<MovieEntity> actualMovies = new ArrayList<>(service.getAllWithIds(ids));
+        List<MovieEntity> actualEntities = new ArrayList<>(service.getAllWithIds(ids));
 
-        assertThat(actualMovies.size()).isEqualTo(expectedMovies.size());
-        for (int i = 0; i < actualMovies.size(); i++) {
-            MovieEntity expected = expectedMovies.get(i);
-            assertMovie(actualMovies.get(i), expected.getTitle(), expected.getReleaseDate(), expected.getStudio());
+        assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
+        for (int i = 0; i < actualEntities.size(); i++) {
+            assertMovie(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
@@ -254,9 +251,9 @@ public class MovieServiceImplTest {
 
         Mockito.when(repository.findAllById(ids)).thenReturn(new ArrayList<>());
 
-        Collection<MovieEntity> actualMovies = service.getAllWithIds(ids);
+        Collection<MovieEntity> actualEntities = service.getAllWithIds(ids);
 
-        assertThat(actualMovies.isEmpty()).isTrue();
+        assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
@@ -264,20 +261,19 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getAll() {
-        List<MovieEntity> expectedMovies = new ArrayList<>();
+        List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(20) + 1; i++) {
             MovieEntity movie = generateRandomMovie();
-            expectedMovies.add(movie);
+            expectedEntities.add(movie);
         }
 
-        Mockito.when(repository.findAll()).thenReturn(expectedMovies);
+        Mockito.when(repository.findAll()).thenReturn(expectedEntities);
 
-        List<MovieEntity> actualMovies = new ArrayList<>(service.getAll());
+        List<MovieEntity> actualEntities = new ArrayList<>(service.getAll());
 
-        assertThat(actualMovies.size()).isEqualTo(expectedMovies.size());
-        for (int i = 0; i < actualMovies.size(); i++) {
-            MovieEntity expected = expectedMovies.get(i);
-            assertMovie(actualMovies.get(i), expected.getTitle(), expected.getReleaseDate(), expected.getStudio());
+        assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
+        for (int i = 0; i < actualEntities.size(); i++) {
+            assertMovie(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
@@ -288,9 +284,9 @@ public class MovieServiceImplTest {
     public void getAll_whereMoviesDoNotExist() {
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        Collection<MovieEntity> actualMovies = service.getAll();
+        Collection<MovieEntity> actualEntities = service.getAll();
 
-        assertThat(actualMovies.isEmpty()).isTrue();
+        assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
@@ -298,14 +294,14 @@ public class MovieServiceImplTest {
      */
     @Test
     public void update() {
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity expected = generateRandomMovie();
 
-        Mockito.when(repository.save(movie)).thenReturn(movie);
+        Mockito.when(repository.save(expected)).thenReturn(expected);
 
-        Optional<MovieEntity> optionalEntity = service.update(generateRandomId(), movie);
+        Optional<MovieEntity> optionalEntity = service.update(generateRandomId(), expected);
 
         assertThat(optionalEntity.isPresent());
-        optionalEntity.ifPresent((m) -> assertMovie(m, movie.getTitle(), movie.getReleaseDate(), movie.getStudio()));
+        optionalEntity.ifPresent((actual) -> assertMovie(actual, expected));
     }
 
     /**
@@ -313,11 +309,11 @@ public class MovieServiceImplTest {
      */
     @Test
     public void update_whereMovieDoesNotExist() {
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity entity = generateRandomMovie();
 
-        Mockito.when(repository.save(movie)).thenReturn(null);
+        Mockito.when(repository.save(entity)).thenReturn(null);
 
-        Optional<MovieEntity> optionalEntity = service.update(generateRandomId(), movie);
+        Optional<MovieEntity> optionalEntity = service.update(generateRandomId(), entity);
 
         assertThat(optionalEntity.isPresent()).isFalse();
     }
@@ -327,15 +323,14 @@ public class MovieServiceImplTest {
      */
     @Test
     public void deleteById() {
-        int id = generateRandomId();
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity expected = generateRandomMovie();
 
-        Mockito.when(repository.findOne(id)).thenReturn(movie);
+        Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
-        Optional<Integer> optionalId = service.deleteById(id);
+        Optional<Integer> optionalId = service.deleteById(expected.getId());
 
         assertThat(optionalId.isPresent());
-        optionalId.ifPresent((actualId) -> assertThat(actualId).isEqualTo(id));
+        optionalId.ifPresent((actualId) -> assertThat(actualId).isEqualTo(expected.getId()));
     }
 
     /**
@@ -358,22 +353,24 @@ public class MovieServiceImplTest {
     @Test
     public void deleteAllWithIds() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            ids.add(generateRandomId());
+        List<MovieEntity> expectedEntities = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            MovieEntity entity = generateRandomMovie();
+            expectedEntities.add(entity);
+            ids.add(entity.getId());
         }
 
-        List<MovieEntity> expectedMovies = new ArrayList<>();
-        for (int i = 0; i < ids.size(); i++) {
-            expectedMovies.add(generateRandomMovie());
-        }
-
-        Mockito.when(repository.findAllById(ids)).thenReturn(expectedMovies);
+        Mockito.when(repository.findAllById(ids)).thenReturn(expectedEntities);
 
         List<Integer> actualIds = new ArrayList<>(service.deleteAllWithIds(ids));
 
+        // Sort the collections so that the proceeding loop will compare IDs in the right order.
+        Collections.sort(ids);
+        Collections.sort(actualIds);
+
         assertThat(actualIds.isEmpty()).isFalse();
         for (int i = 0; i < actualIds.size(); i++) {
-            assertThat(actualIds.get(i)).isEqualTo(expectedMovies.get(i).getId());
+            assertThat(actualIds.get(i)).isEqualTo(ids.get(i));
         }
     }
 
@@ -399,18 +396,25 @@ public class MovieServiceImplTest {
      */
     @Test
     public void deleteAll() {
-        List<MovieEntity> expectedMovies = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            expectedMovies.add(generateRandomMovie());
+        List<Integer> ids = new ArrayList<>();
+        List<MovieEntity> expectedEntities = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            MovieEntity entity = generateRandomMovie();
+            expectedEntities.add(entity);
+            ids.add(entity.getId());
         }
 
-        Mockito.when(repository.findAll()).thenReturn(expectedMovies);
+        Mockito.when(repository.findAll()).thenReturn(expectedEntities);
 
         List<Integer> actualIds = new ArrayList<>(service.deleteAll());
 
+        // Sort the collections so that the proceeding loop will compare IDs in the right order.
+        Collections.sort(ids);
+        Collections.sort(actualIds);
+
         assertThat(actualIds.isEmpty()).isFalse();
         for (int i = 0; i < actualIds.size(); i++) {
-            assertThat(actualIds.get(i)).isEqualTo(expectedMovies.get(i).getId());
+            assertThat(actualIds.get(i)).isEqualTo(ids.get(i));
         }
     }
 
@@ -455,11 +459,11 @@ public class MovieServiceImplTest {
      */
     @Test
     public void exists_withTitle_exists() {
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity entity = generateRandomMovie();
 
-        Mockito.when(repository.findByTitle(movie.getTitle())).thenReturn(movie);
+        Mockito.when(repository.findByTitle(entity.getTitle())).thenReturn(entity);
 
-        assertThat(service.exists(movie.getTitle())).isTrue();
+        assertThat(service.exists(entity.getTitle())).isTrue();
     }
 
     /**
@@ -467,29 +471,28 @@ public class MovieServiceImplTest {
      */
     @Test
     public void exists_withTitle_doesNotExist() {
-        MovieEntity movie = generateRandomMovie();
+        MovieEntity entity = generateRandomMovie();
 
-        Mockito.when(repository.findByTitle(movie.getTitle())).thenReturn(null);
+        Mockito.when(repository.findByTitle(entity.getTitle())).thenReturn(null);
 
-        assertThat(service.exists(movie.getTitle())).isFalse();
+        assertThat(service.exists(entity.getTitle())).isFalse();
     }
 
     /**
-     * Asserts that the fields of a given {@link MovieEntity} match the specified fields.
+     * Asserts that the fields of a given <i>actual</i> {@link MovieEntity} match the fields of the
+     * <i>expected</i> {@link MovieEntity}.
      *
-     * @param movie the movie to be compared to the other specified values.
-     * @param title the title to compare to the title of {@code movie}.
-     * @param releaseDate the release date to compare to the release date of {@code movie}.
-     * @param studio the studio to compare to the studio of {@code movie}.
+     * @param actual the <i>actual</i> movie to be compared to the expected movie.
+     * @param expected the <i>expected</i> movie to be compared to the actual movie.
      */
-    private static void assertMovie(MovieEntity movie, String title, LocalDate releaseDate, String studio) {
-        assertThat(movie).isNotNull();
-        assertThat(movie.getId()).isNotNull();
-        assertThat(movie.getTitle()).isEqualTo(title);
-        assertThat(movie.getReleaseDate()).isEqualTo(releaseDate);
-        assertThat(movie.getStudio()).isEqualTo(studio);
-        assertThat(movie.getNotes()).isNull();
-        assertThat(movie.getPlotSummary()).isNull();
+    private static void assertMovie(MovieEntity actual, MovieEntity expected) {
+        assertThat(actual).isNotNull();
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getTitle()).isEqualTo(expected.getTitle());
+        assertThat(actual.getReleaseDate()).isEqualTo(expected.getReleaseDate());
+        assertThat(actual.getStudio()).isEqualTo(expected.getStudio());
+        assertThat(actual.getPlotSummary()).isEqualTo(expected.getPlotSummary());
+        assertThat(actual.getNotes()).isEqualTo(expected.getNotes());
     }
 
     /**
@@ -501,7 +504,13 @@ public class MovieServiceImplTest {
      * @see #generateRandomStudio()
      */
     private static MovieEntity generateRandomMovie() {
-        return new MovieEntity(generateRandomMovieTitle(), LocalDate.now(), generateRandomStudio());
+        MovieEntity movie = new MovieEntity(generateRandomMovieTitle(),
+                                            LocalDate.now(),
+                                            generateRandomStudio(),
+                                            generateRandomPlotSummary(),
+                                            generateRandomNotes());
+        movie.setId(generateRandomId());
+        return movie;
     }
 
     /**
@@ -529,6 +538,32 @@ public class MovieServiceImplTest {
      */
     private static String generateRandomStudio() {
         return generateRandomString(1, 1_000);
+    }
+
+    /**
+     * Return either null or generates a random string between 1 and 1,024 characters, inclusive.
+     * <p>
+     * A random boolean is generated to determine whether a null should be returned or a string
+     * should be generated.
+     *
+     * @return a new string or null.
+     */
+    @Nullable
+    private static String generateRandomPlotSummary() {
+        return rand.nextBoolean() ? generateRandomString(0, rand.nextInt(1024)) : null;
+    }
+
+    /**
+     * Return either null or generates a random string between 1 and 4,096 characters, inclusive.
+     * <p>
+     * A random boolean is generated to determine whether a null should be returned or a string
+     * should be generated.
+     *
+     * @return a new string or null.
+     */
+    @Nullable
+    private static String generateRandomNotes() {
+        return rand.nextBoolean() ? generateRandomString(0, rand.nextInt(4096)) : null;
     }
 
     /**
