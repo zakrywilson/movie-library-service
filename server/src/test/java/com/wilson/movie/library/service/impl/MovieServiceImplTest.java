@@ -353,7 +353,7 @@ public class MovieServiceImplTest {
     public void deleteAllWithIds() {
         List<Integer> ids = new ArrayList<>();
         List<MovieEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
             MovieEntity entity = generateRandomMovie();
             expectedEntities.add(entity);
             ids.add(entity.getId());
