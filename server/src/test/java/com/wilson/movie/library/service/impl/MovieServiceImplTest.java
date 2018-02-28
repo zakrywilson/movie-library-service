@@ -48,12 +48,11 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getById() {
-        int id = generateRandomId();
         MovieEntity expected = generateRandomMovie();
 
-        Mockito.when(repository.findOne(id)).thenReturn(expected);
+        Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
-        Optional<MovieEntity> optionalEntity = service.getById(id);
+        Optional<MovieEntity> optionalEntity = service.getById(expected.getId());
 
         assertThat(optionalEntity.isPresent());
         optionalEntity.ifPresent((actual) -> assertMovie(actual, expected));
