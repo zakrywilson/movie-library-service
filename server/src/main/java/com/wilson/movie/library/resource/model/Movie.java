@@ -31,7 +31,7 @@ public final class Movie {
     @Wither
     private final String title;
 
-    @JsonProperty("release_date")
+    @JsonProperty("releaseDate")
     @JsonSerialize(using = Serializers.LocalDateSerializer.class)
     @JsonDeserialize(using = Deserializers.LocalDateDeserializer.class)
     @JsonPropertyDescription("ISO date format, e.g., 1980-5-23")
@@ -42,7 +42,7 @@ public final class Movie {
     @Wither
     private final String studio;
 
-    @JsonProperty("plot_summary")
+    @JsonProperty("plotSummary")
     @Wither
     private final String plotSummary;
 
