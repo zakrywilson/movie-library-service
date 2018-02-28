@@ -131,11 +131,4 @@ public class MovieResource {
         return ResponseEntity.noContent().build();
     }
 
-    @RequestMapping(method = GET, params = "title-exists")
-    public ResponseEntity<Void> exists(@RequestParam("title-exists") String title) {
-        log.trace("Received request to check if movie exists with title: \"{}\"", title);
-
-        return new ResponseEntity<>(service.exists(title) ? HttpStatus.FOUND : HttpStatus.NOT_FOUND);
-    }
-
 }
