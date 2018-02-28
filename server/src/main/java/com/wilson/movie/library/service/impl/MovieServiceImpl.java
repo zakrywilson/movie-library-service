@@ -146,8 +146,14 @@ public class MovieServiceImpl implements MovieService {
         Collection<MovieEntity> movies = repository.findAllById(ids);
         repository.deleteInBatch(movies);
 
-        Set<Integer> deletedEntityIds = movies.stream().map(MovieEntity::getId).collect(Collectors.toSet());
-        log.debug("Deleted movies with IDs: {}", deletedEntityIds);
+        Collection<Integer> deletedEntityIds = entities.stream().map(MovieEntity::getId).collect(Collectors.toSet());
+        if (log.isDebugEnabled()) {
+            if (deletedEntityIds.size() <= 25) {
+                log.debug("Deleted {} movies with IDs: {}", deletedEntityIds.size(), deletedEntityIds);
+            } else {
+                log.debug("Deleted {} movies", deletedEntityIds.size());
+            }
+        }
 
         return deletedEntityIds;
     }
@@ -161,10 +167,16 @@ public class MovieServiceImpl implements MovieService {
         List<MovieEntity> movies = repository.findAll();
         repository.deleteInBatch(movies);
 
-        Set<Integer> deletedMovieIds = movies.stream().map(MovieEntity::getId).collect(Collectors.toSet());
-        log.debug("Deleted all movies with IDs: {}", deletedMovieIds);
+        Collection<Integer> deletedEntityIds = entities.stream().map(MovieEntity::getId).collect(Collectors.toSet());
+        if (log.isDebugEnabled()) {
+            if (deletedEntityIds.size() <= 25) {
+                log.debug("Deleted all {} movies with IDs: {}", deletedEntityIds.size(), deletedEntityIds);
+            } else {
+                log.debug("Deleted all {} movies", deletedEntityIds.size());
+            }
+        }
 
-        return deletedMovieIds;
+        return deletedEntityIds;
     }
 
     @Override
