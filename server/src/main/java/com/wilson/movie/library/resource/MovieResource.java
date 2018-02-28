@@ -5,13 +5,13 @@ import com.wilson.movie.library.resource.model.Movie;
 import com.wilson.movie.library.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.wilson.movie.library.resource.utils.Adapters.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -49,86 +49,126 @@ public class MovieResource {
     }
 
     @RequestMapping(method = GET, value = "/{id}")
-    public Movie getById(@PathVariable("id") Integer id) {
+    public ResponseEntity<Movie> getById(@PathVariable("id") Integer id) {
         log.trace("Received request to get movie by ID: {}", id);
 
-        return toMovie(service.getById(id));
+        Optional<MovieEntity> optionalMovie = service.getById(id);
+
+        if (optionalMovie.isPresent()) {
+            return ResponseEntity.ok(toMovie(optionalMovie.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = GET, params = "ids")
-    public Collection<Movie> getAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
+    public ResponseEntity<Collection<Movie>> getAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
         log.trace("Received request to get all movies with IDs: {}", ids);
 
-        return toMovies(service.getAllWithIds(ids));
+        Collection<MovieEntity> movies = service.getAllWithIds(ids);
+
+        if (!movies.isEmpty()) {
+            return ResponseEntity.ok(toMovies(movies));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = GET, params = "title")
-    public Movie getByTitle(@RequestParam("title") String title) {
+    public ResponseEntity<Movie> getByTitle(@RequestParam("title") String title) {
         log.trace("Received request to get movie by title: \"{}\"", title);
 
-        return toMovie(service.getByTitle(title));
+        Optional<MovieEntity> optionalMovie = service.getByTitle(title);
+
+        if (optionalMovie.isPresent()) {
+            return ResponseEntity.ok(toMovie(optionalMovie.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = GET, params = "release-date")
-    public Collection<Movie> getAllByReleaseDate(@RequestParam("release-date") Integer releaseDateEpochDay) {
+    public ResponseEntity<Collection<Movie>> getAllByReleaseDate(@RequestParam("release-date") Integer releaseDateEpochDay) {
         if (log.isTraceEnabled()) {
             log.trace("Received request to get all movies by release date: {}",
                       releaseDateEpochDay != null ? LocalDate.ofEpochDay(releaseDateEpochDay) : null);
         }
 
-        return toMovies(service.getAllByReleaseDate(releaseDateEpochDay));
+        Collection<MovieEntity> movies = service.getAllByReleaseDate(releaseDateEpochDay);
+
+        if (!movies.isEmpty()) {
+            return ResponseEntity.ok(toMovies(movies));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = GET, params = "studio")
-    public Collection<Movie> getAllByStudio(@RequestParam("studio") String studio) {
+    public ResponseEntity<Collection<Movie>> getAllByStudio(@RequestParam("studio") String studio) {
         log.trace("Received request to get all movies by studio: \"{}\"", studio);
 
-        return toMovies(service.getAllByStudio(studio));
+        Collection<MovieEntity> movies = service.getAllByStudio(studio);
+
+        if (!movies.isEmpty()) {
+            return ResponseEntity.ok(toMovies(movies));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = GET)
-    public Collection<Movie> getAll() {
+    public ResponseEntity<Collection<Movie>> getAll() {
         log.trace("Received request to get all movies");
 
-        return toMovies(service.getAll());
+        Collection<MovieEntity> movies = service.getAll();
+
+        if (!movies.isEmpty()) {
+            return ResponseEntity.ok(toMovies(movies));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = PUT, value = "/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody Movie movie) {
         log.trace("Received request to update movie with ID {}: {}", id, movie);
 
-        if (!service.exists(id)) {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<MovieEntity> optionalUpdatedMovie = service.update(id, toMovieEntity(movie));
 
-        service.update(id, toMovieEntity(movie));
-        return ResponseEntity.noContent().build();
+        if (optionalUpdatedMovie.isPresent()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = DELETE, value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
         log.trace("Received request to delete movie by ID: {}", id);
 
-        service.deleteById(id);
+        Optional<Integer> optionalDeletedMovieId = service.deleteById(id);
 
-        return ResponseEntity.noContent().build();
+        if (optionalDeletedMovieId.isPresent()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = DELETE, params = "ids")
     public ResponseEntity<Void> deleteAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
         log.trace("Received request to delete all movies with IDs: {}", ids);
 
-        service.deleteAllWithIds(ids);
+        Collection<Integer> deletedMovieIds = service.deleteAllWithIds(ids);
 
-        return ResponseEntity.noContent().build();
+        if (!deletedMovieIds.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = DELETE)
     public ResponseEntity<Void> deleteAll() {
         log.trace("Received request to delete all movies");
 
-        service.deleteAll();
-        return ResponseEntity.noContent().build();
+        Collection<Integer> deletedMovieIds = service.deleteAll();
+
+        if (!deletedMovieIds.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

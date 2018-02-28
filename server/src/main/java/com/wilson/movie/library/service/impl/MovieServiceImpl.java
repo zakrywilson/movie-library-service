@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -45,18 +45,18 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Nonnull
-    public MovieEntity getById(@Nonnull Integer id) {
+    public Optional<MovieEntity> getById(@Nonnull Integer id) {
         log.trace("Getting movie by ID: {}", id);
 
-        return repository.findOne(id);
+        return Optional.ofNullable(repository.findOne(id));
     }
 
     @Override
     @Nonnull
-    public MovieEntity getByTitle(@Nonnull String title) {
+    public Optional<MovieEntity> getByTitle(@Nonnull String title) {
         log.trace("Getting movie by title: \"{}\"", title);
 
-        return repository.findByTitle(title);
+        return Optional.ofNullable(repository.findByTitle(title));
     }
 
     @Override
@@ -104,37 +104,46 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Nonnull
     @Transactional
-    public MovieEntity update(@Nonnull Integer id, @Nonnull MovieEntity movie) {
+    public Optional<MovieEntity> update(@Nonnull Integer id, @Nonnull MovieEntity movie) {
         log.trace("Updating movie with ID {}: {}", id, movie);
 
-        if (!repository.exists(id)) {
-            throw new IllegalStateException("Movie not found with ID: " + id);
+        Optional<MovieEntity> optionalSavedEntity = Optional.empty();
+
+        Optional<MovieEntity> optionalCurrentEntity = Optional.ofNullable(repository.findOne(id));
+        if (optionalCurrentEntity.isPresent()) {
+            MovieEntity entity = optionalCurrentEntity.get();
+            entity.setTitle(movie.getTitle());
+            entity.setStudio(movie.getStudio());
+            entity.setReleaseDate(movie.getReleaseDate());
+            entity.setPlotSummary(movie.getPlotSummary());
+            entity.setNotes(movie.getNotes());
+
+            optionalSavedEntity = Optional.ofNullable(repository.save(entity));
+
+            optionalSavedEntity.ifPresent((m) -> log.debug("Persisted update to movie with ID {}: {}", id, m));
+        } else {
+            log.debug("No movie exists with ID: {}. Nothing to update", id);
         }
 
-        MovieEntity currentEntity = repository.findOne(id);
-        currentEntity.setTitle(movie.getTitle());
-        currentEntity.setStudio(movie.getStudio());
-        currentEntity.setReleaseDate(movie.getReleaseDate());
-        currentEntity.setPlotSummary(movie.getPlotSummary());
-        currentEntity.setNotes(movie.getNotes());
-
-        MovieEntity savedEntity = repository.save(currentEntity);
-        log.debug("Persisted update to movie with ID {}: {}", id, savedEntity);
-
-        return savedEntity;
+        return optionalSavedEntity;
     }
 
     @Override
     @Nonnull
-    public Integer deleteById(@Nonnull Integer id) {
+    @Transactional
+    public Optional<Integer> deleteById(@Nonnull Integer id) {
         log.trace("Deleting movie by ID: {}", id);
 
-        MovieEntity entity = getById(id); // Gets entity, but also verifies that it exists.
+        Optional<MovieEntity> optionalEntity = Optional.ofNullable(repository.findOne(id));
 
-        repository.delete(id);
-        log.debug("Deleted movie with ID {}: {}", id, entity);
-
-        return id;
+        if (optionalEntity.isPresent()) {
+            repository.delete(id);
+            log.debug("Deleted movie with ID {}: {}", id, optionalEntity.get());
+            return Optional.of(id);
+        } else {
+            log.debug("No movie exists with ID {}. Nothing to delete", id);
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -143,8 +152,8 @@ public class MovieServiceImpl implements MovieService {
     public Collection<Integer> deleteAllWithIds(@Nonnull Collection<Integer> ids) {
         log.trace("Deleting all movies by IDs: {}", ids);
 
-        Collection<MovieEntity> movies = repository.findAllById(ids);
-        repository.deleteInBatch(movies);
+        Collection<MovieEntity> entities = repository.findAllById(ids);
+        repository.deleteInBatch(entities);
 
         Collection<Integer> deletedEntityIds = entities.stream().map(MovieEntity::getId).collect(Collectors.toSet());
         if (log.isDebugEnabled()) {
@@ -164,8 +173,8 @@ public class MovieServiceImpl implements MovieService {
     public Collection<Integer> deleteAll() {
         log.trace("Deleting all movies");
 
-        List<MovieEntity> movies = repository.findAll();
-        repository.deleteInBatch(movies);
+        List<MovieEntity> entities = repository.findAll();
+        repository.deleteInBatch(entities);
 
         Collection<Integer> deletedEntityIds = entities.stream().map(MovieEntity::getId).collect(Collectors.toSet());
         if (log.isDebugEnabled()) {
@@ -190,7 +199,7 @@ public class MovieServiceImpl implements MovieService {
     public boolean exists(@Nonnull String title) {
         log.trace("Checking if movie exists with title: \"{}\"", title);
 
-        return repository.exists(getByTitle(title).getId());
+        return Optional.ofNullable(repository.findByTitle(title)).isPresent();
     }
 
 }
