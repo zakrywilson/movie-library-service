@@ -1,7 +1,9 @@
 package com.wilson.movie.library.resource.utils;
 
 import com.wilson.movie.library.domain.MovieEntity;
+import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.resource.model.Movie;
+import com.wilson.movie.library.resource.model.TvShow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,6 +61,47 @@ public final class Adapters {
     @Nonnull
     public static Collection<MovieEntity> toMovieEntities(@Nonnull Collection<Movie> movies) {
         return movies.stream().map(Adapters::toMovieEntity).collect(Collectors.toList());
+    }
+
+    @Nullable
+    public static TvShow toTvShow(@Nullable TvShowEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return TvShow.builder()
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .dateAired(entity.getDateAired())
+                .network(entity.getNetwork())
+                .rateId(entity.getRatedId())
+                .plotSummary(entity.getPlotSummary())
+                .series(entity.isSeries())
+                .build();
+    }
+
+    @Nullable
+    public static TvShowEntity toTvShowEntity(@Nullable TvShow tvShow) {
+        if (tvShow == null) {
+            return null;
+        }
+
+        return new TvShowEntity(tvShow.getTitle(),
+                                tvShow.getDateAired(),
+                                tvShow.getNetwork(),
+                                tvShow.getRateId(),
+                                tvShow.getPlotSummary(),
+                                tvShow.isSeries());
+    }
+
+    @Nonnull
+    public static Collection<TvShowEntity> toTvShowEntities(@Nonnull Collection<TvShow> tvShows) {
+        return tvShows.stream().map(Adapters::toTvShowEntity).collect(Collectors.toList());
+    }
+
+    @Nonnull
+    public static Collection<TvShow> toTvShows(@Nonnull Collection<TvShowEntity> tvShows) {
+        return tvShows.stream().map(Adapters::toTvShow).collect(Collectors.toList());
     }
 
 }
