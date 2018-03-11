@@ -3,9 +3,10 @@ package com.wilson.movie.library.domain;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 /**
@@ -39,13 +40,14 @@ public class MovieEntity {
     @Column(name = "NOTES", length = 4096)
     private String notes;
 
-    public MovieEntity(@NonNull String title, @NonNull LocalDate releaseDate, @NonNull String studio) {
+    public MovieEntity(@NotNull String title, @NotNull LocalDate releaseDate, @NotNull String studio) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.studio = studio;
     }
 
-    public MovieEntity(@NonNull String title, @NonNull LocalDate releaseDate, @NonNull String studio, String plotSummary, String notes) {
+    public MovieEntity(@NotNull String title, @NotNull LocalDate releaseDate, @NotNull String studio,
+            @Null String plotSummary, @Null String notes) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.studio = studio;
