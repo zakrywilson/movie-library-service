@@ -34,7 +34,7 @@ public final class Movie {
     @JsonProperty("releaseDate")
     @JsonSerialize(using = Serializers.LocalDateSerializer.class)
     @JsonDeserialize(using = Deserializers.LocalDateDeserializer.class)
-    @JsonPropertyDescription("ISO date format, e.g., 1980-5-23")
+    @JsonPropertyDescription("ISO date format, e.g., 1980-05-23")
     @Wither
     private final LocalDate releaseDate;
 
