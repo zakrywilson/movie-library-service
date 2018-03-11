@@ -16,6 +16,7 @@ git clone https://github.com/zakrywilson/movie-library-service.git
 cd movie-library-service/server
 mvn package  
 sudo docker-compose up --build
+```
 
 ## Author
 
