@@ -38,11 +38,11 @@ CREATE TABLE MDB.TV_SHOW
 
 CREATE TABLE MDB.MOVIE
 (
-  ID                       INTEGER          NOT NULL AUTO_INCREMENT,
-  TITLE                    VARCHAR(100)     NOT NULL,
-  RELEASE_DATE             DATE             NOT NULL,
-  STUDIO                   VARCHAR(100)     NOT NULL,
-  PLOT_SUMMARY             VARCHAR(1024)    ,
-  NOTES                    VARCHAR(4096)    ,
+    ID                     INTEGER          NOT NULL AUTO_INCREMENT,
+    TITLE                  VARCHAR(100)     NOT NULL,
+    RELEASE_DATE           DATE             NOT NULL,
+    STUDIO                 VARCHAR(100)     NOT NULL,
+    PLOT_SUMMARY           VARCHAR(1024)    ,
+    NOTES                  VARCHAR(4096)    ,
   PRIMARY KEY(ID)
 );
