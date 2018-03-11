@@ -64,19 +64,19 @@ public final class Adapters {
     }
 
     @Nullable
-    public static TvShow toTvShow(@Nullable TvShowEntity entity) {
-        if (entity == null) {
+    public static TvShow toTvShow(@Nullable TvShowEntity tvShow) {
+        if (tvShow == null) {
             return null;
         }
 
         return TvShow.builder()
-                .id(entity.getId())
-                .title(entity.getTitle())
-                .dateAired(entity.getDateAired())
-                .network(entity.getNetwork())
-                .rateId(entity.getRatedId())
-                .plotSummary(entity.getPlotSummary())
-                .series(entity.isSeries())
+                .id(tvShow.getId())
+                .title(tvShow.getTitle())
+                .dateAired(tvShow.getDateAired())
+                .network(tvShow.getNetwork())
+                .rateId(tvShow.getRatedId())
+                .plotSummary(tvShow.getPlotSummary())
+                .series(tvShow.isSeries())
                 .build();
     }
 

@@ -122,7 +122,7 @@ public class TvShowServiceImpl implements TvShowService {
 
             optionalSavedEntity = Optional.ofNullable(repository.save(entity));
 
-            optionalSavedEntity.ifPresent((m) -> log.debug("Persisted update to TV show with ID {}: {}", id, m));
+            optionalSavedEntity.ifPresent((e) -> log.debug("Persisted update to TV show with ID {}: {}", id, e));
         } else {
             log.debug("No TV show exists with ID {}. Nothing to update", id);
         }

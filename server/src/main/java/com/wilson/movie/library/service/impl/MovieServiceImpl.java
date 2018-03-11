@@ -120,7 +120,7 @@ public class MovieServiceImpl implements MovieService {
 
             optionalSavedEntity = Optional.ofNullable(repository.save(entity));
 
-            optionalSavedEntity.ifPresent((m) -> log.debug("Persisted update to movie with ID {}: {}", id, m));
+            optionalSavedEntity.ifPresent((e) -> log.debug("Persisted update to movie with ID {}: {}", id, e));
         } else {
             log.debug("No movie exists with ID: {}. Nothing to update", id);
         }
