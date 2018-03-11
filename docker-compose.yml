@@ -24,8 +24,6 @@ services:
       backend:
         aliases:
           - service
-    links:
-      - database
 
 networks:
   backend:
