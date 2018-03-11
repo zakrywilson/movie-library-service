@@ -1,4 +1,4 @@
-version: '3.1'
+version: '2.0'
 
 services:
   database:
@@ -21,11 +21,12 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - backend
-      - frontend
+      backend:
+        aliases:
+          - service
     links:
       - database
 
 networks:
   backend:
-  frontend:
+
