@@ -497,6 +497,8 @@ public class MovieServiceImplTest {
      *
      * @see #generateRandomMovieTitle()
      * @see #generateRandomStudio()
+     * @see #generateRandomPlotSummary()
+     * @see #generateRandomNotes()
      */
     private static MovieEntity generateRandomMovie() {
         MovieEntity movie = new MovieEntity(generateRandomMovieTitle(),
