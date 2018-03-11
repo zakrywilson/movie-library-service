@@ -6,7 +6,7 @@
 
 * Java 8  
 * Maven 3  
-* Docker  
+* Docker Engine 1.13.0
 
 ## Author
 
