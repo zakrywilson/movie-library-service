@@ -74,7 +74,7 @@ public final class Adapters {
                 .title(tvShow.getTitle())
                 .dateAired(tvShow.getDateAired())
                 .network(tvShow.getNetwork())
-                .rateId(tvShow.getRatedId())
+                .ratedId(tvShow.getRatedId())
                 .plotSummary(tvShow.getPlotSummary())
                 .series(tvShow.isSeries())
                 .build();
@@ -89,7 +89,7 @@ public final class Adapters {
         return new TvShowEntity(tvShow.getTitle(),
                                 tvShow.getDateAired(),
                                 tvShow.getNetwork(),
-                                tvShow.getRateId(),
+                                tvShow.getRatedId(),
                                 tvShow.getPlotSummary(),
                                 tvShow.isSeries());
     }

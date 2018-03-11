@@ -44,7 +44,7 @@ public final class TvShow {
 
     @JsonProperty("ratedId")
     @Wither
-    private final int rateId;
+    private final int ratedId;
 
     @JsonProperty("plotSummary")
     @Wither
