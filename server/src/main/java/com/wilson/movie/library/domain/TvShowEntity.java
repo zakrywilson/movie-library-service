@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "TV_SHOW")
 @Entity
 @Data
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TvShowEntity {
 
     @Id
