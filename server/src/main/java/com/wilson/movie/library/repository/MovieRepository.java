@@ -16,10 +16,10 @@ import java.util.Collection;
  */
 public interface MovieRepository extends JpaRepository<MovieEntity, Integer> {
 
-    @Query("SELECT m FROM MovieEntity m WHERE m.title LIKE :title")
+    @Query("SELECT m FROM Movie m WHERE m.title LIKE :title")
     MovieEntity findByTitle(@Nonnull @Param("title") String title);
 
-    @Query("SELECT m FROM MovieEntity m WHERE m.studio LIKE :studio")
+    @Query("SELECT m FROM Movie m WHERE m.studio LIKE :studio")
     Collection<MovieEntity> findAllByStudio(@Nonnull @Param("studio") String studio);
 
     Collection<MovieEntity> findAllById(@Nonnull Collection<Integer> ids);

@@ -16,7 +16,7 @@ import java.util.Collection;
  * @author Zach Wilson
  */
 @Table(name = "GENRE")
-@Entity
+@Entity(name = "Genre")
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenreEntity {

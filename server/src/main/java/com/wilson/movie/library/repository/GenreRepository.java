@@ -17,7 +17,7 @@ public interface GenreRepository extends JpaRepository<GenreEntity, Integer> {
 
     Collection<GenreEntity> findAllById(@Nonnull Collection<Integer> ids);
 
-    @Query("SELECT g FROM GenreEntity g WHERE g.name LIKE :name")
+    @Query("SELECT g FROM Genre g WHERE g.name LIKE :name")
     GenreEntity findByName(@Nonnull @Param("name") String name);
 
 }

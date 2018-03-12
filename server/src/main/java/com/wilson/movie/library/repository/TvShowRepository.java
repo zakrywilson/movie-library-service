@@ -16,10 +16,10 @@ import java.util.Collection;
  */
 public interface TvShowRepository extends JpaRepository<TvShowEntity, Integer> {
 
-    @Query("SELECT t FROM TvShowEntity t WHERE t.title LIKE :title")
+    @Query("SELECT t FROM TvShow t WHERE t.title LIKE :title")
     TvShowEntity findByTitle(@Nonnull @Param("title") String title);
 
-    @Query("SELECT t FROM TvShowEntity t WHERE t.network LIKE :network")
+    @Query("SELECT t FROM TvShow t WHERE t.network LIKE :network")
     Collection<TvShowEntity> findAllByNetwork(@Nonnull @Param("network") String network);
 
     Collection<TvShowEntity> findAllById(@Nonnull Collection<Integer> id);

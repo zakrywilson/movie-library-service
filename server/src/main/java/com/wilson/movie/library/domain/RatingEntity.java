@@ -16,7 +16,7 @@ import java.util.Collection;
  * @author Zach Wilson
  */
 @Table(name = "RATING")
-@Entity
+@Entity(name = "Rating")
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RatingEntity {

@@ -17,7 +17,7 @@ public interface RatingRepository extends JpaRepository<RatingEntity, Integer> {
 
     Collection<RatingEntity> findAllById(@Nonnull Collection<Integer> ids);
 
-    @Query("SELECT r FROM RatingEntity r WHERE r.name LIKE :name")
+    @Query("SELECT r FROM Rating r WHERE r.name LIKE :name")
     RatingEntity findByName(@Nonnull @Param("name") String name);
 
 }

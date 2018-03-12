@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * @author Zach Wilson
  */
 @Table(name = "TV_SHOW")
-@Entity
+@Entity(name = "TvShow")
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TvShowEntity {
