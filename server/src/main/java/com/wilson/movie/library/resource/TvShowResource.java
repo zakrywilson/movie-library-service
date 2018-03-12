@@ -1,7 +1,9 @@
 package com.wilson.movie.library.resource;
 
+import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.resource.model.TvShow;
+import com.wilson.movie.library.service.RatingService;
 import com.wilson.movie.library.service.TvShowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.wilson.movie.library.resource.utils.Adapters.toTvShow;
-import static com.wilson.movie.library.resource.utils.Adapters.toTvShowEntity;
-import static com.wilson.movie.library.resource.utils.Adapters.toTvShows;
+import static com.wilson.movie.library.resource.utils.Adapters.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -28,18 +28,25 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @Slf4j
 public class TvShowResource {
 
-    private final TvShowService service;
+    private final TvShowService tvShowService;
+    private final RatingService ratingService;
 
     @Autowired
-    public TvShowResource(TvShowService service) {
-        this.service = service;
+    public TvShowResource(TvShowService tvShowService, RatingService ratingService) {
+        this.tvShowService = tvShowService;
+        this.ratingService = ratingService;
     }
 
     @RequestMapping(method = POST)
     public ResponseEntity<?> create(@RequestBody TvShow tvShow) {
         log.trace("Received request to create TV show: {}", tvShow);
 
-        TvShowEntity createdTvShow = service.create(toTvShowEntity(tvShow));
+        Optional<RatingEntity> rating = ratingService.getByName(tvShow.getRating());
+        if (!rating.isPresent()) {
+            log.debug("Cannot create TV show: provided rating does not exist: \"{}\"", tvShow.getRating());
+            return ResponseEntity.badRequest().build();
+        }
+        TvShowEntity createdTvShow = tvShowService.create(toTvShowEntity(tvShow, toRating(rating.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -54,7 +61,7 @@ public class TvShowResource {
     public ResponseEntity<TvShow> getById(@PathVariable("id") Integer id) {
         log.trace("Received request to get TV show by ID: {}", id);
 
-        Optional<TvShowEntity> optionalTvShow = service.getById(id);
+        Optional<TvShowEntity> optionalTvShow = tvShowService.getById(id);
 
         if (optionalTvShow.isPresent()) {
             return ResponseEntity.ok(toTvShow(optionalTvShow.get()));
@@ -66,7 +73,7 @@ public class TvShowResource {
     public ResponseEntity<Collection<TvShow>> getAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
         log.trace("Received request to get all TV shows with IDs: {}", ids);
 
-        Collection<TvShowEntity> tvShows = service.getAllWithIds(ids);
+        Collection<TvShowEntity> tvShows = tvShowService.getAllWithIds(ids);
 
         if (!tvShows.isEmpty()) {
             return ResponseEntity.ok(toTvShows(tvShows));
@@ -78,7 +85,7 @@ public class TvShowResource {
     public ResponseEntity<TvShow> getByTitle(@RequestParam("title") String title) {
         log.trace("Received request to get TV show by title: \"{}\"", title);
 
-        Optional<TvShowEntity> optionalTvShow = service.getByTitle(title);
+        Optional<TvShowEntity> optionalTvShow = tvShowService.getByTitle(title);
 
         if (optionalTvShow.isPresent()) {
             return ResponseEntity.ok(toTvShow(optionalTvShow.get()));
@@ -93,7 +100,7 @@ public class TvShowResource {
                       dateAiredEpochDay != null ? LocalDate.ofEpochDay(dateAiredEpochDay) : null);
         }
 
-        Collection<TvShowEntity> tvShows = service.getAllByDateAired(dateAiredEpochDay);
+        Collection<TvShowEntity> tvShows = tvShowService.getAllByDateAired(dateAiredEpochDay);
 
         if (!tvShows.isEmpty()) {
             return ResponseEntity.ok(toTvShows(tvShows));
@@ -105,7 +112,7 @@ public class TvShowResource {
     public ResponseEntity<Collection<TvShow>> getAllByNetwork(@RequestParam("network") String network) {
         log.trace("Received request to get all TV shows by network: \"{}\"", network);
 
-        Collection<TvShowEntity> tvShows = service.getAllByNetwork(network);
+        Collection<TvShowEntity> tvShows = tvShowService.getAllByNetwork(network);
 
         if (!tvShows.isEmpty()) {
             return ResponseEntity.ok(toTvShows(tvShows));
@@ -117,7 +124,7 @@ public class TvShowResource {
     public ResponseEntity<Collection<TvShow>> getAll() {
         log.trace("Received request to get all TV shows");
 
-        Collection<TvShowEntity> tvShows = service.getAll();
+        Collection<TvShowEntity> tvShows = tvShowService.getAll();
 
         if (!tvShows.isEmpty()) {
             return ResponseEntity.ok(toTvShows(tvShows));
@@ -129,7 +136,13 @@ public class TvShowResource {
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody TvShow tvShow) {
         log.trace("Received request to update TV show with ID {}: {}", id, tvShow);
 
-        Optional<TvShowEntity> optionalUpdatedTvShow = service.update(id, toTvShowEntity(tvShow));
+        Optional<RatingEntity> rating = ratingService.getByName(tvShow.getRating());
+        if (!rating.isPresent()) {
+            log.debug("Cannot update TV show: provided rating does not exist: \"{}\"", tvShow.getRating());
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<TvShowEntity> optionalUpdatedTvShow =
+                tvShowService.update(id, toTvShowEntity(tvShow, toRating(rating.get())));
 
         if (optionalUpdatedTvShow.isPresent()) {
             return ResponseEntity.noContent().build();
@@ -141,7 +154,7 @@ public class TvShowResource {
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
         log.trace("Received request to delete TV show by ID: {}", id);
 
-        Optional<Integer> optionalDeletedTvShowId = service.deleteById(id);
+        Optional<Integer> optionalDeletedTvShowId = tvShowService.deleteById(id);
 
         if (optionalDeletedTvShowId.isPresent()) {
             return ResponseEntity.noContent().build();
@@ -153,7 +166,7 @@ public class TvShowResource {
     public ResponseEntity<Void> deleteAllWithIds(@RequestParam("ids") Collection<Integer> ids) {
         log.trace("Received request to delete all TV shows with IDs: {}", ids);
 
-        Collection<Integer> deletedTvShowIds = service.deleteAllWithIds(ids);
+        Collection<Integer> deletedTvShowIds = tvShowService.deleteAllWithIds(ids);
 
         if (!deletedTvShowIds.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -165,11 +178,12 @@ public class TvShowResource {
     public ResponseEntity<Void> deleteAll() {
         log.trace("Received request to delete all TV shows");
 
-        Collection<Integer> deletedTvShowIds = service.deleteAll();
+        Collection<Integer> deletedTvShowIds = tvShowService.deleteAll();
 
         if (!deletedTvShowIds.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
+
 }

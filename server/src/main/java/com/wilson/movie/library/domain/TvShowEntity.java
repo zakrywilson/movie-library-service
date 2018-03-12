@@ -33,8 +33,9 @@ public class TvShowEntity {
     @Column(name = "NETWORK", nullable = false, length = 100)
     private String network;
 
-    @Column(name = "RATED_ID", nullable = false)
-    private int ratedId;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "RATING_ID", nullable = false)
+    private RatingEntity rating;
 
     @Column(name = "PLOT_SUMMARY", nullable = false, length = 4096)
     private String plotSummary;
@@ -43,11 +44,11 @@ public class TvShowEntity {
     private boolean series;
 
     public TvShowEntity(@NotNull String title, @NotNull LocalDate dateAired, @NotNull String network,
-            @NotNull Integer ratedId, @NotNull String plotSummary, @NotNull Boolean series) {
+            @NotNull RatingEntity rating, @NotNull String plotSummary, @NotNull Boolean series) {
         this.title = title;
         this.dateAired = dateAired;
         this.network = network;
-        this.ratedId = ratedId;
+        this.rating = rating;
         this.plotSummary = plotSummary;
         this.series = series;
     }

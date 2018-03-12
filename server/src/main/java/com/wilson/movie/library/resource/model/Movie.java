@@ -42,6 +42,10 @@ public final class Movie {
     @Wither
     private final String studio;
 
+    @JsonProperty("rating")
+    @Wither
+    private final String rating;
+
     @JsonProperty("plotSummary")
     @Wither
     private final String plotSummary;

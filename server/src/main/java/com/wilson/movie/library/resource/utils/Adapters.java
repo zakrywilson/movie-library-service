@@ -1,8 +1,10 @@
 package com.wilson.movie.library.resource.utils;
 
 import com.wilson.movie.library.domain.MovieEntity;
+import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.resource.model.Movie;
+import com.wilson.movie.library.resource.model.Rating;
 import com.wilson.movie.library.resource.model.TvShow;
 
 import javax.annotation.Nonnull;
@@ -35,20 +37,22 @@ public final class Adapters {
                 .title(movie.getTitle())
                 .releaseDate(movie.getReleaseDate())
                 .studio(movie.getStudio())
+                .rating(movie.getRating().getName())
                 .plotSummary(movie.getPlotSummary())
                 .notes(movie.getNotes())
                 .build();
     }
 
     @Nullable
-    public static MovieEntity toMovieEntity(@Nullable Movie movie) {
-        if (movie == null) {
+    public static MovieEntity toMovieEntity(@Nullable Movie movie, @Nullable Rating rating) {
+        if (movie == null || rating == null) {
             return null;
         }
 
         return new MovieEntity(movie.getTitle(),
                                movie.getReleaseDate(),
                                movie.getStudio(),
+                               toRating(rating),
                                movie.getPlotSummary(),
                                movie.getNotes());
     }
@@ -56,11 +60,6 @@ public final class Adapters {
     @Nonnull
     public static Collection<Movie> toMovies(@Nonnull Collection<MovieEntity> movies) {
         return movies.stream().map(Adapters::toMovie).collect(Collectors.toList());
-    }
-
-    @Nonnull
-    public static Collection<MovieEntity> toMovieEntities(@Nonnull Collection<Movie> movies) {
-        return movies.stream().map(Adapters::toMovieEntity).collect(Collectors.toList());
     }
 
     @Nullable
@@ -74,34 +73,56 @@ public final class Adapters {
                 .title(tvShow.getTitle())
                 .dateAired(tvShow.getDateAired())
                 .network(tvShow.getNetwork())
-                .ratedId(tvShow.getRatedId())
+                .rating(tvShow.getRating().getName())
                 .plotSummary(tvShow.getPlotSummary())
                 .series(tvShow.isSeries())
                 .build();
     }
 
     @Nullable
-    public static TvShowEntity toTvShowEntity(@Nullable TvShow tvShow) {
-        if (tvShow == null) {
+    public static TvShowEntity toTvShowEntity(@Nullable TvShow tvShow, @Nullable Rating rating) {
+        if (tvShow == null || rating == null) {
             return null;
         }
 
         return new TvShowEntity(tvShow.getTitle(),
                                 tvShow.getDateAired(),
                                 tvShow.getNetwork(),
-                                tvShow.getRatedId(),
+                                toRating(rating),
                                 tvShow.getPlotSummary(),
                                 tvShow.isSeries());
     }
 
     @Nonnull
-    public static Collection<TvShowEntity> toTvShowEntities(@Nonnull Collection<TvShow> tvShows) {
-        return tvShows.stream().map(Adapters::toTvShowEntity).collect(Collectors.toList());
+    public static Collection<TvShow> toTvShows(@Nonnull Collection<TvShowEntity> tvShows) {
+        return tvShows.stream().map(Adapters::toTvShow).collect(Collectors.toList());
+    }
+
+    @Nullable
+    public static Rating toRating(@Nullable RatingEntity rating) {
+        if (rating == null) {
+            return null;
+        }
+
+        return Rating.builder()
+                .id(rating.getId())
+                .name(rating.getName())
+                .description(rating.getDescription())
+                .build();
+    }
+
+    @Nullable
+    public static RatingEntity toRating(@Nullable Rating rating) {
+        if (rating == null) {
+            return null;
+        }
+
+        return new RatingEntity(rating.getName(), rating.getDescription());
     }
 
     @Nonnull
-    public static Collection<TvShow> toTvShows(@Nonnull Collection<TvShowEntity> tvShows) {
-        return tvShows.stream().map(Adapters::toTvShow).collect(Collectors.toList());
+    public static Collection<Rating> toRatings(@Nonnull Collection<RatingEntity> ratings) {
+        return ratings.stream().map(Adapters::toRating).collect(Collectors.toList());
     }
 
 }

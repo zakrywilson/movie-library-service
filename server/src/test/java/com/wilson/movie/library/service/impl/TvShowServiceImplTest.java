@@ -1,5 +1,6 @@
 package com.wilson.movie.library.service.impl;
 
+import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.repository.TvShowRepository;
 import org.junit.Test;
@@ -485,7 +486,7 @@ public class TvShowServiceImplTest {
         assertThat(actual.getTitle()).isEqualTo(expected.getTitle());
         assertThat(actual.getDateAired()).isEqualTo(expected.getDateAired());
         assertThat(actual.getNetwork()).isEqualTo(expected.getNetwork());
-        assertThat(actual.getRatedId()).isEqualTo(expected.getRatedId());
+        assertThat(actual.getRating()).isEqualTo(expected.getRating());
         assertThat(actual.getPlotSummary()).isEqualTo(expected.getPlotSummary());
         assertThat(actual.isSeries()).isEqualTo(expected.isSeries());
     }
@@ -497,14 +498,14 @@ public class TvShowServiceImplTest {
      *
      * @see #generateRandomTvShowTitle()
      * @see #generateRandomNetwork()
-     * @see #generateRandomRatedId()
+     * @see #generateRandomRating()
      * @see #generateRandomPlotSummary()
      */
     private static TvShowEntity generateRandomTvShow() {
         TvShowEntity tvShow = new TvShowEntity(generateRandomTvShowTitle(),
                                                LocalDate.now(),
                                                generateRandomNetwork(),
-                                               generateRandomRatedId(),
+                                               generateRandomRating(),
                                                generateRandomPlotSummary(),
                                                rand.nextBoolean());
         tvShow.setId(generateRandomId());
@@ -539,12 +540,14 @@ public class TvShowServiceImplTest {
     }
 
     /**
-     * Generates a random integer between 1 and 100, inclusive.
+     * Generates a random {@link RatingEntity}.
      *
-     * @return a new integer.
+     * @return a new rating.
      */
-    private static int generateRandomRatedId() {
-        return rand.nextInt(99) + 1;
+    private static RatingEntity generateRandomRating() {
+        RatingEntity rating = new RatingEntity(generateRandomString(1, 100), generateRandomString(1, 200));
+        rating.setId(rand.nextInt(99) + 1);
+        return rating;
     }
 
     /**

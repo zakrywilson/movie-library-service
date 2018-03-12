@@ -116,7 +116,7 @@ public class TvShowServiceImpl implements TvShowService {
             entity.setTitle(tvShow.getTitle());
             entity.setDateAired(tvShow.getDateAired());
             entity.setNetwork(tvShow.getNetwork());
-            entity.setRatedId(tvShow.getRatedId());
+            entity.setRating(tvShow.getRating());
             entity.setPlotSummary(tvShow.getPlotSummary());
             entity.setSeries(tvShow.isSeries());
 

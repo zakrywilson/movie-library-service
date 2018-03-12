@@ -24,17 +24,26 @@
 DROP DATABASE MDB;     -- Movie Data Base
 CREATE DATABASE MDB;
 
+CREATE TABLE MDB.RATING
+(
+    ID                     INTEGER          NOT NULL,
+    NAME                   VARCHAR(100)     NOT NULL UNIQUE,
+    DESCRIPTION            VARCHAR(200)     ,
+  PRIMARY KEY(ID)
+);
+
 CREATE TABLE MDB.TV_SHOW
 (
     ID                     INTEGER          NOT NULL AUTO_INCREMENT,
     TITLE                  VARCHAR(100)     NOT NULL,
     DATE_AIRED             DATE             NOT NULL,
     NETWORK                VARCHAR(100)     NOT NULL,
-    RATED_ID               INTEGER          NOT NULL,
+    RATING_ID              INTEGER          NOT NULL,
     PLOT_SUMMARY           VARCHAR(4096)    NOT NULL,
     IS_SERIES              BOOLEAN          NOT NULL,
  PRIMARY KEY(ID)
 );
+ALTER TABLE MDB.TV_SHOW ADD CONSTRAINT TVSHOW_RATINGID_FK FOREIGN KEY(RATING_ID) REFERENCES MDB.RATING(ID);
 
 CREATE TABLE MDB.MOVIE
 (
@@ -42,7 +51,9 @@ CREATE TABLE MDB.MOVIE
     TITLE                  VARCHAR(100)     NOT NULL,
     RELEASE_DATE           DATE             NOT NULL,
     STUDIO                 VARCHAR(100)     NOT NULL,
+    RATING_ID              INTEGER          NOT NULL,
     PLOT_SUMMARY           VARCHAR(1024)    ,
     NOTES                  VARCHAR(4096)    ,
   PRIMARY KEY(ID)
 );
+ALTER TABLE MDB.MOVIE ADD CONSTRAINT MOVIE_RATINGID_FK FOREIGN KEY(RATING_ID) REFERENCES MDB.RATING(ID);

@@ -1,6 +1,7 @@
 package com.wilson.movie.library.service.impl;
 
 import com.wilson.movie.library.domain.MovieEntity;
+import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.repository.MovieRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -497,6 +498,7 @@ public class MovieServiceImplTest {
      *
      * @see #generateRandomMovieTitle()
      * @see #generateRandomStudio()
+     * @see #generateRandomRating()
      * @see #generateRandomPlotSummary()
      * @see #generateRandomNotes()
      */
@@ -504,6 +506,7 @@ public class MovieServiceImplTest {
         MovieEntity movie = new MovieEntity(generateRandomMovieTitle(),
                                             LocalDate.now(),
                                             generateRandomStudio(),
+                                            generateRandomRating(),
                                             generateRandomPlotSummary(),
                                             generateRandomNotes());
         movie.setId(generateRandomId());
@@ -561,6 +564,17 @@ public class MovieServiceImplTest {
     @Nullable
     private static String generateRandomNotes() {
         return rand.nextBoolean() ? generateRandomString(0, rand.nextInt(4096)) : null;
+    }
+
+    /**
+     * Generates a random {@link RatingEntity}.
+     *
+     * @return a new rating.
+     */
+    private static RatingEntity generateRandomRating() {
+        RatingEntity rating = new RatingEntity(generateRandomString(1, 100), generateRandomString(1, 200));
+        rating.setId(rand.nextInt(99) + 1);
+        return rating;
     }
 
     /**

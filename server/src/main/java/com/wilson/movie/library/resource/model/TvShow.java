@@ -42,9 +42,9 @@ public final class TvShow {
     @Wither
     private final String network;
 
-    @JsonProperty("ratedId")
+    @JsonProperty("rating")
     @Wither
-    private final int ratedId;
+    private final String rating;
 
     @JsonProperty("plotSummary")
     @Wither
