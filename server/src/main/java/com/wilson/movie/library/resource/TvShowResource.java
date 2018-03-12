@@ -3,6 +3,7 @@ package com.wilson.movie.library.resource;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.resource.model.TvShow;
+import com.wilson.movie.library.resource.utils.Adapters;
 import com.wilson.movie.library.service.RatingService;
 import com.wilson.movie.library.service.TvShowService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class TvShowResource {
             log.debug("Cannot create TV show: provided rating does not exist: \"{}\"", tvShow.getRating());
             return ResponseEntity.badRequest().build();
         }
-        TvShowEntity createdTvShow = tvShowService.create(toTvShowEntity(tvShow, toRating(rating.get())));
+        TvShowEntity createdTvShow = tvShowService.create(Adapters.toTvShow(tvShow, toRating(rating.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -142,7 +143,7 @@ public class TvShowResource {
             return ResponseEntity.badRequest().build();
         }
         Optional<TvShowEntity> optionalUpdatedTvShow =
-                tvShowService.update(id, toTvShowEntity(tvShow, toRating(rating.get())));
+                tvShowService.update(id, Adapters.toTvShow(tvShow, toRating(rating.get())));
 
         if (optionalUpdatedTvShow.isPresent()) {
             return ResponseEntity.noContent().build();

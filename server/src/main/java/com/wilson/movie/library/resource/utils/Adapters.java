@@ -44,7 +44,7 @@ public final class Adapters {
     }
 
     @Nullable
-    public static MovieEntity toMovieEntity(@Nullable Movie movie, @Nullable Rating rating) {
+    public static MovieEntity toMovie(@Nullable Movie movie, @Nullable Rating rating) {
         if (movie == null || rating == null) {
             return null;
         }
@@ -80,7 +80,7 @@ public final class Adapters {
     }
 
     @Nullable
-    public static TvShowEntity toTvShowEntity(@Nullable TvShow tvShow, @Nullable Rating rating) {
+    public static TvShowEntity toTvShow(@Nullable TvShow tvShow, @Nullable Rating rating) {
         if (tvShow == null || rating == null) {
             return null;
         }

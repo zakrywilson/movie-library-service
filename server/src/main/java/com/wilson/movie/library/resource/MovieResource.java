@@ -3,6 +3,7 @@ package com.wilson.movie.library.resource;
 import com.wilson.movie.library.domain.MovieEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.resource.model.Movie;
+import com.wilson.movie.library.resource.utils.Adapters;
 import com.wilson.movie.library.service.MovieService;
 import com.wilson.movie.library.service.RatingService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class MovieResource {
             log.debug("Cannot create movie: provided rating does not exist: \"{}\"", movie.getRating());
             return ResponseEntity.badRequest().build();
         }
-        MovieEntity createdMovie = movieService.create(toMovieEntity(movie, toRating(rating.get())));
+        MovieEntity createdMovie = movieService.create(Adapters.toMovie(movie, toRating(rating.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -142,7 +143,7 @@ public class MovieResource {
             return ResponseEntity.badRequest().build();
         }
         Optional<MovieEntity> optionalUpdatedMovie =
-                movieService.update(id, toMovieEntity(movie, toRating(rating.get())));
+                movieService.update(id, Adapters.toMovie(movie, toRating(rating.get())));
 
         if (optionalUpdatedMovie.isPresent()) {
             return ResponseEntity.noContent().build();
