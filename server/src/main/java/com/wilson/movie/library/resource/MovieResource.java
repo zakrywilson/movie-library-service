@@ -1,9 +1,10 @@
 package com.wilson.movie.library.resource;
 
+import com.wilson.movie.library.domain.GenreEntity;
 import com.wilson.movie.library.domain.MovieEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.resource.model.Movie;
-import com.wilson.movie.library.resource.utils.Adapters;
+import com.wilson.movie.library.service.GenreService;
 import com.wilson.movie.library.service.MovieService;
 import com.wilson.movie.library.service.RatingService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,23 +32,35 @@ public class MovieResource {
 
     private final MovieService movieService;
     private final RatingService ratingService;
+    private final GenreService genreService;
 
     @Autowired
-    public MovieResource(MovieService movieService, RatingService ratingService) {
+    public MovieResource(MovieService movieService, RatingService ratingService, GenreService genreService) {
         this.movieService = movieService;
         this.ratingService = ratingService;
+        this.genreService = genreService;
     }
 
     @RequestMapping(method = POST)
     public ResponseEntity<?> create(@RequestBody Movie movie) {
         log.trace("Received request to create movie: {}", movie);
 
+        // Get the rating
         Optional<RatingEntity> rating = ratingService.getByName(movie.getRating());
         if (!rating.isPresent()) {
             log.debug("Cannot create movie: provided rating does not exist: \"{}\"", movie.getRating());
             return ResponseEntity.badRequest().build();
         }
-        MovieEntity createdMovie = movieService.create(Adapters.toMovie(movie, toRating(rating.get())));
+
+        // Get the genre
+        Optional<GenreEntity> genre = genreService.getByName(movie.getGenre());
+        if (!genre.isPresent()) {
+            log.debug("Cannot create movie: provided genre does not exist: \"{}\"", movie.getGenre());
+            return ResponseEntity.badRequest().build();
+        }
+
+        MovieEntity createdMovie =
+                movieService.create(toMovie(movie, toRating(rating.get()), toGenre(genre.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -137,13 +150,22 @@ public class MovieResource {
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody Movie movie) {
         log.trace("Received request to update movie with ID {}: {}", id, movie);
 
+        // Get the rating
         Optional<RatingEntity> rating = ratingService.getByName(movie.getRating());
         if (!rating.isPresent()) {
             log.debug("Cannot update movie: provided rating does not exist: \"{}\"", movie.getRating());
             return ResponseEntity.badRequest().build();
         }
+
+        // Get the genre
+        Optional<GenreEntity> genre = genreService.getByName(movie.getGenre());
+        if (!genre.isPresent()) {
+            log.debug("Cannot update movie: provided genre does not exist: \"{}\"", movie.getGenre());
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<MovieEntity> optionalUpdatedMovie =
-                movieService.update(id, Adapters.toMovie(movie, toRating(rating.get())));
+                movieService.update(id, toMovie(movie, toRating(rating.get()), toGenre(genre.get())));
 
         if (optionalUpdatedMovie.isPresent()) {
             return ResponseEntity.noContent().build();

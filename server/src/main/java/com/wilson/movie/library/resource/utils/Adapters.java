@@ -1,8 +1,10 @@
 package com.wilson.movie.library.resource.utils;
 
+import com.wilson.movie.library.domain.GenreEntity;
 import com.wilson.movie.library.domain.MovieEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
+import com.wilson.movie.library.resource.model.Genre;
 import com.wilson.movie.library.resource.model.Movie;
 import com.wilson.movie.library.resource.model.Rating;
 import com.wilson.movie.library.resource.model.TvShow;
@@ -38,14 +40,15 @@ public final class Adapters {
                 .releaseDate(movie.getReleaseDate())
                 .studio(movie.getStudio())
                 .rating(movie.getRating().getName())
+                .genre(movie.getGenre().getName())
                 .plotSummary(movie.getPlotSummary())
                 .notes(movie.getNotes())
                 .build();
     }
 
     @Nullable
-    public static MovieEntity toMovie(@Nullable Movie movie, @Nullable Rating rating) {
-        if (movie == null || rating == null) {
+    public static MovieEntity toMovie(@Nullable Movie movie, @Nullable Rating rating, @Nullable Genre genre) {
+        if (movie == null || rating == null || genre == null) {
             return null;
         }
 
@@ -53,6 +56,7 @@ public final class Adapters {
                                movie.getReleaseDate(),
                                movie.getStudio(),
                                toRating(rating),
+                               toGenre(genre),
                                movie.getPlotSummary(),
                                movie.getNotes());
     }
@@ -74,14 +78,16 @@ public final class Adapters {
                 .dateAired(tvShow.getDateAired())
                 .network(tvShow.getNetwork())
                 .rating(tvShow.getRating().getName())
+                .genre(tvShow.getGenre().getName())
                 .plotSummary(tvShow.getPlotSummary())
                 .series(tvShow.isSeries())
                 .build();
     }
 
     @Nullable
-    public static TvShowEntity toTvShow(@Nullable TvShow tvShow, @Nullable Rating rating) {
-        if (tvShow == null || rating == null) {
+    public static TvShowEntity toTvShow(@Nullable TvShow tvShow, @Nullable Rating rating,
+            @Nullable Genre genre) {
+        if (tvShow == null || rating == null || genre == null) {
             return null;
         }
 
@@ -89,6 +95,7 @@ public final class Adapters {
                                 tvShow.getDateAired(),
                                 tvShow.getNetwork(),
                                 toRating(rating),
+                                toGenre(genre),
                                 tvShow.getPlotSummary(),
                                 tvShow.isSeries());
     }
@@ -123,6 +130,33 @@ public final class Adapters {
     @Nonnull
     public static Collection<Rating> toRatings(@Nonnull Collection<RatingEntity> ratings) {
         return ratings.stream().map(Adapters::toRating).collect(Collectors.toList());
+    }
+
+    @Nullable
+    public static Genre toGenre(@Nullable GenreEntity rating) {
+        if (rating == null) {
+            return null;
+        }
+
+        return Genre.builder()
+                .id(rating.getId())
+                .name(rating.getName())
+                .description(rating.getDescription())
+                .build();
+    }
+
+    @Nullable
+    public static GenreEntity toGenre(@Nullable Genre rating) {
+        if (rating == null) {
+            return null;
+        }
+
+        return new GenreEntity(rating.getName(), rating.getDescription());
+    }
+
+    @Nonnull
+    public static Collection<Genre> toGenres(@Nonnull Collection<GenreEntity> ratings) {
+        return ratings.stream().map(Adapters::toGenre).collect(Collectors.toList());
     }
 
 }

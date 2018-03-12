@@ -1,9 +1,10 @@
 package com.wilson.movie.library.resource;
 
+import com.wilson.movie.library.domain.GenreEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.resource.model.TvShow;
-import com.wilson.movie.library.resource.utils.Adapters;
+import com.wilson.movie.library.service.GenreService;
 import com.wilson.movie.library.service.RatingService;
 import com.wilson.movie.library.service.TvShowService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,23 +32,35 @@ public class TvShowResource {
 
     private final TvShowService tvShowService;
     private final RatingService ratingService;
+    private final GenreService genreService;
 
     @Autowired
-    public TvShowResource(TvShowService tvShowService, RatingService ratingService) {
+    public TvShowResource(TvShowService tvShowService, RatingService ratingService, GenreService genreService) {
         this.tvShowService = tvShowService;
         this.ratingService = ratingService;
+        this.genreService = genreService;
     }
 
     @RequestMapping(method = POST)
     public ResponseEntity<?> create(@RequestBody TvShow tvShow) {
         log.trace("Received request to create TV show: {}", tvShow);
 
+        // Get the rating
         Optional<RatingEntity> rating = ratingService.getByName(tvShow.getRating());
         if (!rating.isPresent()) {
             log.debug("Cannot create TV show: provided rating does not exist: \"{}\"", tvShow.getRating());
             return ResponseEntity.badRequest().build();
         }
-        TvShowEntity createdTvShow = tvShowService.create(Adapters.toTvShow(tvShow, toRating(rating.get())));
+
+        // Get the genre
+        Optional<GenreEntity> genre = genreService.getByName(tvShow.getGenre());
+        if (!genre.isPresent()) {
+            log.debug("Cannot create TV show: provided genre does not exist: \"{}\"", tvShow.getGenre());
+            return ResponseEntity.badRequest().build();
+        }
+
+        TvShowEntity createdTvShow =
+                tvShowService.create(toTvShow(tvShow, toRating(rating.get()), toGenre(genre.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -137,13 +150,22 @@ public class TvShowResource {
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody TvShow tvShow) {
         log.trace("Received request to update TV show with ID {}: {}", id, tvShow);
 
+        // Get the rating
         Optional<RatingEntity> rating = ratingService.getByName(tvShow.getRating());
         if (!rating.isPresent()) {
             log.debug("Cannot update TV show: provided rating does not exist: \"{}\"", tvShow.getRating());
             return ResponseEntity.badRequest().build();
         }
+
+        // Get the genre
+        Optional<GenreEntity> genre = genreService.getByName(tvShow.getGenre());
+        if (!genre.isPresent()) {
+            log.debug("Cannot update TV show: provided genre does not exist: \"{}\"", tvShow.getGenre());
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<TvShowEntity> optionalUpdatedTvShow =
-                tvShowService.update(id, Adapters.toTvShow(tvShow, toRating(rating.get())));
+                tvShowService.update(id, toTvShow(tvShow, toRating(rating.get()), toGenre(genre.get())));
 
         if (optionalUpdatedTvShow.isPresent()) {
             return ResponseEntity.noContent().build();

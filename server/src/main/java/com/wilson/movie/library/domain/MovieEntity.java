@@ -38,6 +38,10 @@ public class MovieEntity {
     @JoinColumn(name = "RATING_ID", nullable = false)
     private RatingEntity rating;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "GENRE_ID", nullable = false)
+    private GenreEntity genre;
+
     @Column(name = "PLOT_SUMMARY", length = 1024)
     private String plotSummary;
 
@@ -45,19 +49,22 @@ public class MovieEntity {
     private String notes;
 
     public MovieEntity(@NotNull String title, @NotNull LocalDate releaseDate,
-            @NotNull String studio, @NotNull RatingEntity rating) {
+            @NotNull String studio, @NotNull RatingEntity rating, @NotNull GenreEntity genre) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.studio = studio;
         this.rating = rating;
+        this.genre = genre;
     }
 
     public MovieEntity(@NotNull String title, @NotNull LocalDate releaseDate, @NotNull String studio,
-            @NotNull RatingEntity rating, @Null String plotSummary, @Null String notes) {
+            @NotNull RatingEntity rating, @NotNull GenreEntity genre, @Null String plotSummary,
+            @Null String notes) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.studio = studio;
         this.rating = rating;
+        this.genre = genre;
         this.plotSummary = plotSummary;
         this.notes = notes;
     }

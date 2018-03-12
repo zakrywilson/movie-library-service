@@ -27,6 +27,7 @@ public final class TvShowEntityFactory {
      * @see #generateRandomTvShowTitle()
      * @see #generateRandomNetwork()
      * @see RatingEntityFactory#generateRandomRating()
+     * @see GenreEntityFactory#generateRandomGenre()
      * @see #generateRandomPlotSummary()
      */
     public static TvShowEntity generateRandomTvShow() {
@@ -34,6 +35,7 @@ public final class TvShowEntityFactory {
                                                LocalDate.now(),
                                                generateRandomNetwork(),
                                                RatingEntityFactory.generateRandomRating(),
+                                               GenreEntityFactory.generateRandomGenre(),
                                                generateRandomPlotSummary(),
                                                RandomValueFactory.nextBoolean());
         tvShow.setId(RandomValueFactory.nextIntId());

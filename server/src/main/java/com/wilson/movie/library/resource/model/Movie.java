@@ -46,6 +46,10 @@ public final class Movie {
     @Wither
     private final String rating;
 
+    @JsonProperty("genre")
+    @Wither
+    private final String genre;
+
     @JsonProperty("plotSummary")
     @Wither
     private final String plotSummary;
