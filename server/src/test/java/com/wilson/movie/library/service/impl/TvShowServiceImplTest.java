@@ -1,8 +1,9 @@
 package com.wilson.movie.library.service.impl;
 
-import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.repository.TvShowRepository;
+import com.wilson.movie.library.service.impl.factories.RandomValueFactory;
+import com.wilson.movie.library.service.impl.factories.TvShowEntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.annotation.Nonnull;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -35,7 +35,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void create() {
-        TvShowEntity expected = generateRandomTvShow();
+        TvShowEntity expected = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
@@ -49,7 +49,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void getById() {
-        TvShowEntity expected = generateRandomTvShow();
+        TvShowEntity expected = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -64,7 +64,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void getById_whereTvShowDoesNotExist() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.findOne(id)).thenReturn(null);
 
@@ -78,7 +78,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void getByTitle() {
-        TvShowEntity expected = generateRandomTvShow();
+        TvShowEntity expected = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.findByTitle(expected.getTitle())).thenReturn(expected);
 
@@ -93,7 +93,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void getByTitle_whereTvShowDoesNotExist() {
-        String title = generateRandomTvShowTitle();
+        String title = TvShowEntityFactory.generateRandomTvShowTitle();
 
         Mockito.when(repository.findByTitle(title)).thenReturn(null);
 
@@ -109,8 +109,8 @@ public class TvShowServiceImplTest {
     public void getAllByDateAired_withLocalDate() {
         LocalDate dateAired = LocalDate.now();
         List<TvShowEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            TvShowEntity entity = generateRandomTvShow();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
             entity.setDateAired(dateAired);
             expectedEntities.add(entity);
         }
@@ -146,8 +146,8 @@ public class TvShowServiceImplTest {
     public void getAllByDateAired_withIntEpochDay() {
         LocalDate dateAired = LocalDate.now();
         List<TvShowEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            TvShowEntity entity = generateRandomTvShow();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
             entity.setDateAired(LocalDate.ofEpochDay(dateAired.toEpochDay()));
             expectedEntities.add(entity);
         }
@@ -181,10 +181,10 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void getAllByNetwork() {
-        String network = generateRandomNetwork();
+        String network = TvShowEntityFactory.generateRandomNetwork();
         List<TvShowEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            TvShowEntity entity = generateRandomTvShow();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
             entity.setNetwork(network);
             expectedEntities.add(entity);
         }
@@ -204,7 +204,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void getAllByNetwork_whereTvShowDoNotExit() {
-        String network = generateRandomNetwork();
+        String network = TvShowEntityFactory.generateRandomNetwork();
 
         Mockito.when(repository.findAllByNetwork(network)).thenReturn(new ArrayList<>());
 
@@ -221,7 +221,7 @@ public class TvShowServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<TvShowEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
-            TvShowEntity entity = generateRandomTvShow();
+            TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -242,8 +242,8 @@ public class TvShowServiceImplTest {
     @Test
     public void getAllWithIds_whereTvShowDoNotExist() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            ids.add(generateRandomId());
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            ids.add(RandomValueFactory.nextIntId());
         }
 
         Mockito.when(repository.findAllById(ids)).thenReturn(new ArrayList<>());
@@ -259,8 +259,8 @@ public class TvShowServiceImplTest {
     @Test
     public void getAll() {
         List<TvShowEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            expectedEntities.add(generateRandomTvShow());
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            expectedEntities.add(TvShowEntityFactory.generateRandomTvShow());
         }
 
         Mockito.when(repository.findAll()).thenReturn(expectedEntities);
@@ -290,11 +290,11 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void update() {
-        TvShowEntity expected = generateRandomTvShow();
+        TvShowEntity expected = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
-        Optional<TvShowEntity> optionalEntity = service.update(generateRandomId(), expected);
+        Optional<TvShowEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), expected);
 
         assertThat(optionalEntity.isPresent());
         optionalEntity.ifPresent((actual) -> assertTvShow(actual, expected));
@@ -305,11 +305,11 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void update_whereTvShowDoesNotExist() {
-        TvShowEntity entity = generateRandomTvShow();
+        TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.save(entity)).thenReturn(null);
 
-        Optional<TvShowEntity> optionalEntity = service.update(generateRandomId(), entity);
+        Optional<TvShowEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), entity);
 
         assertThat(optionalEntity.isPresent()).isFalse();
     }
@@ -319,7 +319,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void deleteById() {
-        TvShowEntity expected = generateRandomTvShow();
+        TvShowEntity expected = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -334,7 +334,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void deleteById_whereTvShowDoesNotExist() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.findOne(id)).thenReturn(null);
 
@@ -350,8 +350,8 @@ public class TvShowServiceImplTest {
     public void deleteAllWithIds() {
         List<Integer> ids = new ArrayList<>();
         List<TvShowEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            TvShowEntity entity = generateRandomTvShow();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -376,8 +376,8 @@ public class TvShowServiceImplTest {
     @Test
     public void deleteAllWithIds_whereTvShowDoNotExist() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            ids.add(generateRandomId());
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            ids.add(RandomValueFactory.nextIntId());
         }
 
         Mockito.when(repository.findAllById(ids)).thenReturn(new ArrayList<>());
@@ -395,7 +395,7 @@ public class TvShowServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<TvShowEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            TvShowEntity entity = generateRandomTvShow();
+            TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -431,7 +431,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void exists_withId_exists() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.exists(id)).thenReturn(true);
 
@@ -443,7 +443,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void exists_withId_doesNotExist() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.exists(id)).thenReturn(false);
 
@@ -455,7 +455,7 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void exists_withTitle_exists() {
-        TvShowEntity entity = generateRandomTvShow();
+        TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.findByTitle(entity.getTitle())).thenReturn(entity);
 
@@ -467,12 +467,13 @@ public class TvShowServiceImplTest {
      */
     @Test
     public void exists_withTitle_doesNotExist() {
-        TvShowEntity entity = generateRandomTvShow();
+        TvShowEntity entity = TvShowEntityFactory.generateRandomTvShow();
 
         Mockito.when(repository.findByTitle(entity.getTitle())).thenReturn(null);
 
         assertThat(service.exists(entity.getTitle())).isFalse();
     }
+
     /**
      * Asserts that the fields of a given <i>actual</i> {@link TvShowEntity} match the fields of the
      * <i>expected</i> {@link TvShowEntity}.
@@ -490,106 +491,5 @@ public class TvShowServiceImplTest {
         assertThat(actual.getPlotSummary()).isEqualTo(expected.getPlotSummary());
         assertThat(actual.isSeries()).isEqualTo(expected.isSeries());
     }
-
-    /**
-     * Generates a new {@code TvShowEntity}.
-     *
-     * @return a new TV show.
-     *
-     * @see #generateRandomTvShowTitle()
-     * @see #generateRandomNetwork()
-     * @see #generateRandomRating()
-     * @see #generateRandomPlotSummary()
-     */
-    private static TvShowEntity generateRandomTvShow() {
-        TvShowEntity tvShow = new TvShowEntity(generateRandomTvShowTitle(),
-                                               LocalDate.now(),
-                                               generateRandomNetwork(),
-                                               generateRandomRating(),
-                                               generateRandomPlotSummary(),
-                                               rand.nextBoolean());
-        tvShow.setId(generateRandomId());
-        return tvShow;
-    }
-
-    /**
-     * Generates a new integer between 1 and 10,000.
-     *
-     * @return a new integer.
-     */
-    private static int generateRandomId() {
-        return rand.nextInt(10_000) + 1; // Offset by +1 since Random#nextInt(int) is exclusive.
-    }
-
-    /**
-     * Generates a random string between 1 and 20 characters, inclusive.
-     *
-     * @return a new string.
-     */
-    private static String generateRandomTvShowTitle() {
-        return generateRandomString(1, 20);
-    }
-
-    /**
-     * Generates a random string between 1 and 100 characters, inclusive.
-     *
-     * @return a new string.
-     */
-    private static String generateRandomNetwork() {
-        return generateRandomString(1, 100);
-    }
-
-    /**
-     * Generates a random {@link RatingEntity}.
-     *
-     * @return a new rating.
-     */
-    private static RatingEntity generateRandomRating() {
-        RatingEntity rating = new RatingEntity(generateRandomString(1, 100), generateRandomString(1, 200));
-        rating.setId(rand.nextInt(99) + 1);
-        return rating;
-    }
-
-    /**
-     * Generates a random string between 1 and 1,024 characters, inclusive.
-     *
-     * @return a new string.
-     */
-    @Nonnull
-    private static String generateRandomPlotSummary() {
-        return generateRandomString(0, rand.nextInt(1024));
-    }
-
-    /**
-     * Generates a random string between {@code maxCharacters} and {@code minCharacters}.
-     *
-     * @param minCharacters the minimum number of characters in the returned string, inclusive.
-     * @param maxCharacters the maximum number of characters in the returned string, inclusive.
-     * @return a random string of characters between {@code minCharacters} and {@code maxCharacters}.
-     */
-    private static String generateRandomString(int minCharacters, int maxCharacters) {
-        // Offset by +1 since Random#nextInt(int) is exclusive on the upper bound and this method
-        // is inclusive.
-        int characterCount = rand.nextInt(maxCharacters - minCharacters + 1);
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < characterCount; i++) {
-            sb.append(getRandomCharacter());
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * Returns a random alphanumeric character (plus some punctuation characters).
-     *
-     * @return a random character.
-     */
-    private static char getRandomCharacter() {
-        return acceptableChars[rand.nextInt(acceptableChars.length)];
-    }
-
-    private static final Random rand = new Random(System.nanoTime());
-    private static final char[] acceptableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,:;-_".toCharArray();
 
 }

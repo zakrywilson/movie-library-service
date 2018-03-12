@@ -1,8 +1,9 @@
 package com.wilson.movie.library.service.impl;
 
 import com.wilson.movie.library.domain.MovieEntity;
-import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.repository.MovieRepository;
+import com.wilson.movie.library.service.impl.factories.MovieEntityFactory;
+import com.wilson.movie.library.service.impl.factories.RandomValueFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -35,7 +35,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void create() {
-        MovieEntity expected = generateRandomMovie();
+        MovieEntity expected = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
@@ -49,7 +49,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getById() {
-        MovieEntity expected = generateRandomMovie();
+        MovieEntity expected = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -64,7 +64,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getById_whereMovieDoesNotExist() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.findOne(id)).thenReturn(null);
 
@@ -78,7 +78,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getByTitle() {
-        MovieEntity expected = generateRandomMovie();
+        MovieEntity expected = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.findByTitle(expected.getTitle())).thenReturn(expected);
 
@@ -93,7 +93,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getByTitle_whereMovieDoesNotExist() {
-        String title = generateRandomMovieTitle();
+        String title = MovieEntityFactory.generateRandomMovieTitle();
 
         Mockito.when(repository.findByTitle(title)).thenReturn(null);
 
@@ -109,8 +109,8 @@ public class MovieServiceImplTest {
     public void getAllByReleaseDate_withLocalDate() {
         LocalDate releaseDate = LocalDate.now();
         List<MovieEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity entity = generateRandomMovie();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            MovieEntity entity = MovieEntityFactory.generateRandomMovie();
             entity.setReleaseDate(releaseDate);
             expectedEntities.add(entity);
         }
@@ -146,8 +146,8 @@ public class MovieServiceImplTest {
     public void getAllByReleaseDate_withIntEpochDay() {
         LocalDate releaseDate = LocalDate.now();
         List<MovieEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity entity = generateRandomMovie();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            MovieEntity entity = MovieEntityFactory.generateRandomMovie();
             entity.setReleaseDate(LocalDate.ofEpochDay(releaseDate.toEpochDay()));
             expectedEntities.add(entity);
         }
@@ -181,10 +181,10 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getAllByStudio() {
-        String studio = generateRandomStudio();
+        String studio = MovieEntityFactory.generateRandomStudio();
         List<MovieEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity entity = generateRandomMovie();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            MovieEntity entity = MovieEntityFactory.generateRandomMovie();
             entity.setStudio(studio);
             expectedEntities.add(entity);
         }
@@ -204,7 +204,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void getAllByStudio_whereMoviesDoNotExit() {
-        String studio = generateRandomStudio();
+        String studio = MovieEntityFactory.generateRandomStudio();
 
         Mockito.when(repository.findAllByStudio(studio)).thenReturn(new ArrayList<>());
 
@@ -221,7 +221,7 @@ public class MovieServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
-            MovieEntity entity = generateRandomMovie();
+            MovieEntity entity = MovieEntityFactory.generateRandomMovie();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -242,8 +242,8 @@ public class MovieServiceImplTest {
     @Test
     public void getAllWithIds_whereMoviesDoNotExist() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            ids.add(generateRandomId());
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            ids.add(RandomValueFactory.nextIntId());
         }
 
         Mockito.when(repository.findAllById(ids)).thenReturn(new ArrayList<>());
@@ -259,8 +259,8 @@ public class MovieServiceImplTest {
     @Test
     public void getAll() {
         List<MovieEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            expectedEntities.add(generateRandomMovie());
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            expectedEntities.add(MovieEntityFactory.generateRandomMovie());
         }
 
         Mockito.when(repository.findAll()).thenReturn(expectedEntities);
@@ -290,11 +290,11 @@ public class MovieServiceImplTest {
      */
     @Test
     public void update() {
-        MovieEntity expected = generateRandomMovie();
+        MovieEntity expected = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
-        Optional<MovieEntity> optionalEntity = service.update(generateRandomId(), expected);
+        Optional<MovieEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), expected);
 
         assertThat(optionalEntity.isPresent());
         optionalEntity.ifPresent((actual) -> assertMovie(actual, expected));
@@ -305,11 +305,11 @@ public class MovieServiceImplTest {
      */
     @Test
     public void update_whereMovieDoesNotExist() {
-        MovieEntity entity = generateRandomMovie();
+        MovieEntity entity = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.save(entity)).thenReturn(null);
 
-        Optional<MovieEntity> optionalEntity = service.update(generateRandomId(), entity);
+        Optional<MovieEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), entity);
 
         assertThat(optionalEntity.isPresent()).isFalse();
     }
@@ -319,7 +319,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void deleteById() {
-        MovieEntity expected = generateRandomMovie();
+        MovieEntity expected = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -334,7 +334,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void deleteById_whereMovieDoesNotExist() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.findOne(id)).thenReturn(null);
 
@@ -350,8 +350,8 @@ public class MovieServiceImplTest {
     public void deleteAllWithIds() {
         List<Integer> ids = new ArrayList<>();
         List<MovieEntity> expectedEntities = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            MovieEntity entity = generateRandomMovie();
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            MovieEntity entity = MovieEntityFactory.generateRandomMovie();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -376,8 +376,8 @@ public class MovieServiceImplTest {
     @Test
     public void deleteAllWithIds_whereMoviesDoNotExist() {
         List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(20) + 1; i++) {
-            ids.add(generateRandomId());
+        for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
+            ids.add(RandomValueFactory.nextIntId());
         }
 
         Mockito.when(repository.findAllById(ids)).thenReturn(new ArrayList<>());
@@ -395,7 +395,7 @@ public class MovieServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<MovieEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            MovieEntity entity = generateRandomMovie();
+            MovieEntity entity = MovieEntityFactory.generateRandomMovie();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -431,7 +431,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void exists_withId_exists() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.exists(id)).thenReturn(true);
 
@@ -443,7 +443,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void exists_withId_doesNotExist() {
-        int id = generateRandomId();
+        int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.exists(id)).thenReturn(false);
 
@@ -455,7 +455,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void exists_withTitle_exists() {
-        MovieEntity entity = generateRandomMovie();
+        MovieEntity entity = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.findByTitle(entity.getTitle())).thenReturn(entity);
 
@@ -467,7 +467,7 @@ public class MovieServiceImplTest {
      */
     @Test
     public void exists_withTitle_doesNotExist() {
-        MovieEntity entity = generateRandomMovie();
+        MovieEntity entity = MovieEntityFactory.generateRandomMovie();
 
         Mockito.when(repository.findByTitle(entity.getTitle())).thenReturn(null);
 
@@ -490,123 +490,5 @@ public class MovieServiceImplTest {
         assertThat(actual.getPlotSummary()).isEqualTo(expected.getPlotSummary());
         assertThat(actual.getNotes()).isEqualTo(expected.getNotes());
     }
-
-    /**
-     * Generates a new {@code MovieEntity}.
-     *
-     * @return a new movie.
-     *
-     * @see #generateRandomMovieTitle()
-     * @see #generateRandomStudio()
-     * @see #generateRandomRating()
-     * @see #generateRandomPlotSummary()
-     * @see #generateRandomNotes()
-     */
-    private static MovieEntity generateRandomMovie() {
-        MovieEntity movie = new MovieEntity(generateRandomMovieTitle(),
-                                            LocalDate.now(),
-                                            generateRandomStudio(),
-                                            generateRandomRating(),
-                                            generateRandomPlotSummary(),
-                                            generateRandomNotes());
-        movie.setId(generateRandomId());
-        return movie;
-    }
-
-    /**
-     * Generates a new integer between 1 and 10,000.
-     *
-     * @return a new integer.
-     */
-    private static int generateRandomId() {
-        return rand.nextInt(10_000) + 1; // Offset by +1 since Random#nextInt(int) is exclusive.
-    }
-
-    /**
-     * Generates a random string between 1 and 20 characters, inclusive.
-     *
-     * @return a new string.
-     */
-    private static String generateRandomMovieTitle() {
-        return generateRandomString(1, 20);
-    }
-
-    /**
-     * Generates a random string between 1 and 1,000 characters, inclusive.
-     *
-     * @return a new string.
-     */
-    private static String generateRandomStudio() {
-        return generateRandomString(1, 1_000);
-    }
-
-    /**
-     * Return either null or generates a random string between 1 and 1,024 characters, inclusive.
-     * <p>
-     * A random boolean is generated to determine whether a null should be returned or a string
-     * should be generated.
-     *
-     * @return a new string or null.
-     */
-    @Nullable
-    private static String generateRandomPlotSummary() {
-        return rand.nextBoolean() ? generateRandomString(0, rand.nextInt(1024)) : null;
-    }
-
-    /**
-     * Return either null or generates a random string between 1 and 4,096 characters, inclusive.
-     * <p>
-     * A random boolean is generated to determine whether a null should be returned or a string
-     * should be generated.
-     *
-     * @return a new string or null.
-     */
-    @Nullable
-    private static String generateRandomNotes() {
-        return rand.nextBoolean() ? generateRandomString(0, rand.nextInt(4096)) : null;
-    }
-
-    /**
-     * Generates a random {@link RatingEntity}.
-     *
-     * @return a new rating.
-     */
-    private static RatingEntity generateRandomRating() {
-        RatingEntity rating = new RatingEntity(generateRandomString(1, 100), generateRandomString(1, 200));
-        rating.setId(rand.nextInt(99) + 1);
-        return rating;
-    }
-
-    /**
-     * Generates a random string between {@code maxCharacters} and {@code minCharacters}.
-     *
-     * @param minCharacters the minimum number of characters in the returned string, inclusive.
-     * @param maxCharacters the maximum number of characters in the returned string, inclusive.
-     * @return a random string of characters between {@code minCharacters} and {@code maxCharacters}.
-     */
-    private static String generateRandomString(int minCharacters, int maxCharacters) {
-        // Offset by +1 since Random#nextInt(int) is exclusive on the upper bound and this method
-        // is inclusive.
-        int characterCount = rand.nextInt(maxCharacters - minCharacters + 1);
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < characterCount; i++) {
-            sb.append(getRandomCharacter());
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * Returns a random alphanumeric character (plus some punctuation characters).
-     *
-     * @return a random character.
-     */
-    private static char getRandomCharacter() {
-        return acceptableChars[rand.nextInt(acceptableChars.length)];
-    }
-
-    private static final Random rand = new Random(System.nanoTime());
-    private static final char[] acceptableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,:;-_".toCharArray();
 
 }
