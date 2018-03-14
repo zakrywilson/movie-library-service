@@ -38,7 +38,7 @@ public final class IdentityEntityFactory {
     /**
      * Generates a random {@link GenreEntity}.
      *
-     * @return a new rating.
+     * @return a new genre.
      */
     public static GenreEntity generateRandomGenre() {
         GenreEntity genre = new GenreEntity(
