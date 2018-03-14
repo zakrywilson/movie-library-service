@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Rating JPA entity.
@@ -31,12 +29,6 @@ public class RatingEntity {
 
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
-
-    @OneToMany(mappedBy = "rating")
-    private Collection<TvShowEntity> tvShows = new ArrayList<>();
-
-    @OneToMany(mappedBy = "rating")
-    private Collection<TvShowEntity> movies = new ArrayList<>();
 
     public RatingEntity(@NotNull String name) {
         this.name = name;

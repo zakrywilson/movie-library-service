@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Genre JPA entity.
@@ -31,12 +29,6 @@ public class GenreEntity {
 
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
-
-    @OneToMany(mappedBy = "genre")
-    private Collection<TvShowEntity> tvShows = new ArrayList<>();
-
-    @OneToMany(mappedBy = "genre")
-    private Collection<MovieEntity> movies = new ArrayList<>();
 
     public GenreEntity(@NotNull String name) {
         this.name = name;
