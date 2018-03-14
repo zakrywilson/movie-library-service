@@ -26,8 +26,8 @@ public final class MovieEntityFactory {
      *
      * @see #generateRandomMovieTitle()
      * @see #generateRandomStudio()
-     * @see RatingEntityFactory#generateRandomRating()
-     * @see GenreEntityFactory#generateRandomGenre()
+     * @see IdentityEntityFactory#generateRandomRating()
+     * @see IdentityEntityFactory#generateRandomGenre()
      * @see #generateRandomPlotSummary()
      * @see #generateRandomNotes()
      * @see RandomValueFactory#nextIntId()
@@ -36,8 +36,8 @@ public final class MovieEntityFactory {
         MovieEntity movie = new MovieEntity(generateRandomMovieTitle(),
                                             LocalDate.now(),
                                             generateRandomStudio(),
-                                            RatingEntityFactory.generateRandomRating(),
-                                            GenreEntityFactory.generateRandomGenre(),
+                                            IdentityEntityFactory.generateRandomRating(),
+                                            IdentityEntityFactory.generateRandomGenre(),
                                             generateRandomPlotSummary(),
                                             generateRandomNotes());
         movie.setId(RandomValueFactory.nextIntId());

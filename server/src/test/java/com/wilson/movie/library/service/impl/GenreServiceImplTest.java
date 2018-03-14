@@ -2,8 +2,8 @@ package com.wilson.movie.library.service.impl;
 
 import com.wilson.movie.library.domain.GenreEntity;
 import com.wilson.movie.library.repository.GenreRepository;
+import com.wilson.movie.library.service.impl.factories.IdentityEntityFactory;
 import com.wilson.movie.library.service.impl.factories.RandomValueFactory;
-import com.wilson.movie.library.service.impl.factories.GenreEntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,7 +34,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void create() {
-        GenreEntity expected = GenreEntityFactory.generateRandomGenre();
+        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
@@ -48,7 +48,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void getById() {
-        GenreEntity expected = GenreEntityFactory.generateRandomGenre();
+        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -77,7 +77,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void getByName() {
-        GenreEntity expected = GenreEntityFactory.generateRandomGenre();
+        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.findByName(expected.getName())).thenReturn(expected);
 
@@ -92,7 +92,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void getByName_whereGenreDoesNotExist() {
-        String name = GenreEntityFactory.generateRandomGenreName();
+        String name = IdentityEntityFactory.generateRandomIdentityName();
 
         Mockito.when(repository.findByName(name)).thenReturn(null);
 
@@ -109,7 +109,7 @@ public class GenreServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<GenreEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
-            GenreEntity entity = GenreEntityFactory.generateRandomGenre();
+            GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -148,7 +148,7 @@ public class GenreServiceImplTest {
     public void getAll() {
         List<GenreEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
-            expectedEntities.add(GenreEntityFactory.generateRandomGenre());
+            expectedEntities.add(IdentityEntityFactory.generateRandomGenre());
         }
 
         Mockito.when(repository.findAll()).thenReturn(expectedEntities);
@@ -178,7 +178,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void update() {
-        GenreEntity expected = GenreEntityFactory.generateRandomGenre();
+        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
@@ -193,7 +193,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void update_whereGenreDoesNotExist() {
-        GenreEntity entity = GenreEntityFactory.generateRandomGenre();
+        GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.save(entity)).thenReturn(null);
 
@@ -207,7 +207,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void deleteById() {
-        GenreEntity expected = GenreEntityFactory.generateRandomGenre();
+        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -239,7 +239,7 @@ public class GenreServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<GenreEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
-            GenreEntity entity = GenreEntityFactory.generateRandomGenre();
+            GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -283,7 +283,7 @@ public class GenreServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<GenreEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            GenreEntity entity = GenreEntityFactory.generateRandomGenre();
+            GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -343,7 +343,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void exists_withName_exists() {
-        GenreEntity entity = GenreEntityFactory.generateRandomGenre();
+        GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.findByName(entity.getName())).thenReturn(entity);
 
@@ -355,7 +355,7 @@ public class GenreServiceImplTest {
      */
     @Test
     public void exists_withName_doesNotExist() {
-        GenreEntity entity = GenreEntityFactory.generateRandomGenre();
+        GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
 
         Mockito.when(repository.findByName(entity.getName())).thenReturn(null);
 

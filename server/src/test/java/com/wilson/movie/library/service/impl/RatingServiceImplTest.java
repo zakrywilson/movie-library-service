@@ -3,7 +3,7 @@ package com.wilson.movie.library.service.impl;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.repository.RatingRepository;
 import com.wilson.movie.library.service.impl.factories.RandomValueFactory;
-import com.wilson.movie.library.service.impl.factories.RatingEntityFactory;
+import com.wilson.movie.library.service.impl.factories.IdentityEntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,7 +34,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void create() {
-        RatingEntity expected = RatingEntityFactory.generateRandomRating();
+        RatingEntity expected = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
@@ -48,7 +48,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void getById() {
-        RatingEntity expected = RatingEntityFactory.generateRandomRating();
+        RatingEntity expected = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -77,7 +77,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void getByName() {
-        RatingEntity expected = RatingEntityFactory.generateRandomRating();
+        RatingEntity expected = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.findByName(expected.getName())).thenReturn(expected);
 
@@ -92,7 +92,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void getByName_whereRatingDoesNotExist() {
-        String name = RatingEntityFactory.generateRandomRatingName();
+        String name = IdentityEntityFactory.generateRandomIdentityName();
 
         Mockito.when(repository.findByName(name)).thenReturn(null);
 
@@ -109,7 +109,7 @@ public class RatingServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<RatingEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
-            RatingEntity entity = RatingEntityFactory.generateRandomRating();
+            RatingEntity entity = IdentityEntityFactory.generateRandomRating();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -148,7 +148,7 @@ public class RatingServiceImplTest {
     public void getAll() {
         List<RatingEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
-            expectedEntities.add(RatingEntityFactory.generateRandomRating());
+            expectedEntities.add(IdentityEntityFactory.generateRandomRating());
         }
 
         Mockito.when(repository.findAll()).thenReturn(expectedEntities);
@@ -178,7 +178,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void update() {
-        RatingEntity expected = RatingEntityFactory.generateRandomRating();
+        RatingEntity expected = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
@@ -193,7 +193,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void update_whereRatingDoesNotExist() {
-        RatingEntity entity = RatingEntityFactory.generateRandomRating();
+        RatingEntity entity = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.save(entity)).thenReturn(null);
 
@@ -207,7 +207,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void deleteById() {
-        RatingEntity expected = RatingEntityFactory.generateRandomRating();
+        RatingEntity expected = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -239,7 +239,7 @@ public class RatingServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<RatingEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
-            RatingEntity entity = RatingEntityFactory.generateRandomRating();
+            RatingEntity entity = IdentityEntityFactory.generateRandomRating();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -283,7 +283,7 @@ public class RatingServiceImplTest {
         List<Integer> ids = new ArrayList<>();
         List<RatingEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            RatingEntity entity = RatingEntityFactory.generateRandomRating();
+            RatingEntity entity = IdentityEntityFactory.generateRandomRating();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -343,7 +343,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void exists_withName_exists() {
-        RatingEntity entity = RatingEntityFactory.generateRandomRating();
+        RatingEntity entity = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.findByName(entity.getName())).thenReturn(entity);
 
@@ -355,7 +355,7 @@ public class RatingServiceImplTest {
      */
     @Test
     public void exists_withName_doesNotExist() {
-        RatingEntity entity = RatingEntityFactory.generateRandomRating();
+        RatingEntity entity = IdentityEntityFactory.generateRandomRating();
 
         Mockito.when(repository.findByName(entity.getName())).thenReturn(null);
 

@@ -26,16 +26,16 @@ public final class TvShowEntityFactory {
      *
      * @see #generateRandomTvShowTitle()
      * @see #generateRandomNetwork()
-     * @see RatingEntityFactory#generateRandomRating()
-     * @see GenreEntityFactory#generateRandomGenre()
+     * @see IdentityEntityFactory#generateRandomRating()
+     * @see IdentityEntityFactory#generateRandomGenre()
      * @see #generateRandomPlotSummary()
      */
     public static TvShowEntity generateRandomTvShow() {
         TvShowEntity tvShow = new TvShowEntity(generateRandomTvShowTitle(),
                                                LocalDate.now(),
                                                generateRandomNetwork(),
-                                               RatingEntityFactory.generateRandomRating(),
-                                               GenreEntityFactory.generateRandomGenre(),
+                                               IdentityEntityFactory.generateRandomRating(),
+                                               IdentityEntityFactory.generateRandomGenre(),
                                                generateRandomPlotSummary(),
                                                RandomValueFactory.nextBoolean());
         tvShow.setId(RandomValueFactory.nextIntId());
