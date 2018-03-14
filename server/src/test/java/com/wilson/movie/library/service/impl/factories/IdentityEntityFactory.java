@@ -1,6 +1,7 @@
 package com.wilson.movie.library.service.impl.factories;
 
 import com.wilson.movie.library.domain.GenreEntity;
+import com.wilson.movie.library.domain.LanguageEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 
 /**
@@ -33,6 +34,19 @@ public final class IdentityEntityFactory {
      */
     public static String generateRandomIdentityDescription() {
         return RandomValueFactory.generateRandomString(1, 200);
+    }
+
+    /**
+     * Generates a random {@link LanguageEntity}.
+     *
+     * @return a new language.
+     */
+    public static LanguageEntity generateRandomLanguage() {
+        LanguageEntity genre = new LanguageEntity(
+                RandomValueFactory.generateRandomString(1, 100),
+                RandomValueFactory.generateRandomString(1, 200));
+        genre.setId(RandomValueFactory.nextIntId());
+        return genre;
     }
 
     /**

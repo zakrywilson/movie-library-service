@@ -38,6 +38,7 @@ public final class MovieEntityFactory {
                                             generateRandomStudio(),
                                             IdentityEntityFactory.generateRandomRating(),
                                             IdentityEntityFactory.generateRandomGenre(),
+                                            IdentityEntityFactory.generateRandomLanguage(),
                                             generateRandomPlotSummary(),
                                             generateRandomNotes());
         movie.setId(RandomValueFactory.nextIntId());

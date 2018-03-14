@@ -1,7 +1,7 @@
 package com.wilson.movie.library.service.impl;
 
-import com.wilson.movie.library.domain.GenreEntity;
-import com.wilson.movie.library.repository.GenreRepository;
+import com.wilson.movie.library.domain.LanguageEntity;
+import com.wilson.movie.library.repository.LanguageRepository;
 import com.wilson.movie.library.service.impl.factories.IdentityEntityFactory;
 import com.wilson.movie.library.service.impl.factories.RandomValueFactory;
 import org.junit.Test;
@@ -16,119 +16,119 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests {@link GenreServiceImpl}.
+ * Tests {@link LanguageServiceImpl}.
  *
  * @author Zach Wilson
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GenreServiceImplTest {
+public class LanguageServiceImplTest {
 
     @InjectMocks
-    private GenreServiceImpl service;
+    private LanguageServiceImpl service;
 
     @Mock
-    private GenreRepository repository;
+    private LanguageRepository repository;
 
     /**
-     * Tests {@link GenreServiceImpl#create(GenreEntity)}.
+     * Tests {@link LanguageServiceImpl#create(LanguageEntity)}.
      */
     @Test
     public void create() {
-        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity expected = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
-        GenreEntity actual = service.create(expected);
+        LanguageEntity actual = service.create(expected);
 
         assertThat(actual).isEqualTo(expected);
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getById(Integer)}.
+     * Tests {@link LanguageServiceImpl#getById(Integer)}.
      */
     @Test
     public void getById() {
-        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity expected = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
-        Optional<GenreEntity> optionalEntity = service.getById(expected.getId());
+        Optional<LanguageEntity> optionalEntity = service.getById(expected.getId());
 
         assertThat(optionalEntity.isPresent());
-        optionalEntity.ifPresent((actual) -> assertGenre(actual, expected));
+        optionalEntity.ifPresent((actual) -> assertLanguage(actual, expected));
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getById(Integer)}.
+     * Tests {@link LanguageServiceImpl#getById(Integer)}.
      */
     @Test
-    public void getById_whereGenreDoesNotExist() {
+    public void getById_whereLanguageDoesNotExist() {
         int id = RandomValueFactory.nextIntId();
 
         Mockito.when(repository.findOne(id)).thenReturn(null);
 
-        Optional<GenreEntity> optionalEntity = service.getById(id);
+        Optional<LanguageEntity> optionalEntity = service.getById(id);
 
         assertThat(optionalEntity.isPresent()).isFalse();
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getByName(String)}.
+     * Tests {@link LanguageServiceImpl#getByName(String)}.
      */
     @Test
     public void getByName() {
-        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity expected = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.findByName(expected.getName())).thenReturn(expected);
 
-        Optional<GenreEntity> optionalEntity = service.getByName(expected.getName());
+        Optional<LanguageEntity> optionalEntity = service.getByName(expected.getName());
 
         assertThat(optionalEntity.isPresent());
-        optionalEntity.ifPresent((actual) -> assertGenre(actual, expected));
+        optionalEntity.ifPresent((actual) -> assertLanguage(actual, expected));
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getByName(String)}.
+     * Tests {@link LanguageServiceImpl#getByName(String)}.
      */
     @Test
-    public void getByName_whereGenreDoesNotExist() {
+    public void getByName_whereLanguageDoesNotExist() {
         String name = IdentityEntityFactory.generateRandomIdentityName();
 
         Mockito.when(repository.findByName(name)).thenReturn(null);
 
-        Optional<GenreEntity> optionalEntity = service.getByName(name);
+        Optional<LanguageEntity> optionalEntity = service.getByName(name);
 
         assertThat(optionalEntity.isPresent()).isFalse();
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getAllWithIds(Collection)}.
+     * Tests {@link LanguageServiceImpl#getAllWithIds(Collection)}.
      */
     @Test
     public void getAllWithIds() {
         List<Integer> ids = new ArrayList<>();
-        List<GenreEntity> expectedEntities = new ArrayList<>();
+        List<LanguageEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
-            GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
+            LanguageEntity entity = IdentityEntityFactory.generateRandomLanguage();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
 
         Mockito.when(repository.findAllById(ids)).thenReturn(expectedEntities);
 
-        List<GenreEntity> actualEntities = new ArrayList<>(service.getAllWithIds(ids));
+        List<LanguageEntity> actualEntities = new ArrayList<>(service.getAllWithIds(ids));
 
         assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
         for (int i = 0; i < actualEntities.size(); i++) {
-            assertGenre(actualEntities.get(i), expectedEntities.get(i));
+            assertLanguage(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getAllWithIds(Collection)}.
+     * Tests {@link LanguageServiceImpl#getAllWithIds(Collection)}.
      */
     @Test
-    public void getAllWithIds_whereGenresDoNotExist() {
+    public void getAllWithIds_whereLanguagesDoNotExist() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
             ids.add(RandomValueFactory.nextIntId());
@@ -136,78 +136,78 @@ public class GenreServiceImplTest {
 
         Mockito.when(repository.findAllById(ids)).thenReturn(new ArrayList<>());
 
-        Collection<GenreEntity> actualEntities = service.getAllWithIds(ids);
+        Collection<LanguageEntity> actualEntities = service.getAllWithIds(ids);
 
         assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getAll()}.
+     * Tests {@link LanguageServiceImpl#getAll()}.
      */
     @Test
     public void getAll() {
-        List<GenreEntity> expectedEntities = new ArrayList<>();
+        List<LanguageEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
-            expectedEntities.add(IdentityEntityFactory.generateRandomGenre());
+            expectedEntities.add(IdentityEntityFactory.generateRandomLanguage());
         }
 
         Mockito.when(repository.findAll()).thenReturn(expectedEntities);
 
-        List<GenreEntity> actualEntities = new ArrayList<>(service.getAll());
+        List<LanguageEntity> actualEntities = new ArrayList<>(service.getAll());
 
         assertThat(actualEntities.size()).isEqualTo(expectedEntities.size());
         for (int i = 0; i < actualEntities.size(); i++) {
-            assertGenre(actualEntities.get(i), expectedEntities.get(i));
+            assertLanguage(actualEntities.get(i), expectedEntities.get(i));
         }
     }
 
     /**
-     * Tests {@link GenreServiceImpl#getAll()}.
+     * Tests {@link LanguageServiceImpl#getAll()}.
      */
     @Test
-    public void getAll_whereGenresDoNotExist() {
+    public void getAll_whereLanguagesDoNotExist() {
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        Collection<GenreEntity> actualEntities = service.getAll();
+        Collection<LanguageEntity> actualEntities = service.getAll();
 
         assertThat(actualEntities.isEmpty()).isTrue();
     }
 
     /**
-     * Tests {@link GenreServiceImpl#update(Integer, GenreEntity)}.
+     * Tests {@link LanguageServiceImpl#update(Integer, LanguageEntity)}.
      */
     @Test
     public void update() {
-        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity expected = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.save(expected)).thenReturn(expected);
 
-        Optional<GenreEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), expected);
+        Optional<LanguageEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), expected);
 
         assertThat(optionalEntity.isPresent());
-        optionalEntity.ifPresent((actual) -> assertGenre(actual, expected));
+        optionalEntity.ifPresent((actual) -> assertLanguage(actual, expected));
     }
 
     /**
-     * Tests {@link GenreServiceImpl#update(Integer, GenreEntity)}.
+     * Tests {@link LanguageServiceImpl#update(Integer, LanguageEntity)}.
      */
     @Test
-    public void update_whereGenreDoesNotExist() {
-        GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
+    public void update_whereLanguageDoesNotExist() {
+        LanguageEntity entity = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.save(entity)).thenReturn(null);
 
-        Optional<GenreEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), entity);
+        Optional<LanguageEntity> optionalEntity = service.update(RandomValueFactory.nextIntId(), entity);
 
         assertThat(optionalEntity.isPresent()).isFalse();
     }
 
     /**
-     * Tests {@link GenreServiceImpl#deleteById(Integer)}.
+     * Tests {@link LanguageServiceImpl#deleteById(Integer)}.
      */
     @Test
     public void deleteById() {
-        GenreEntity expected = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity expected = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.findOne(expected.getId())).thenReturn(expected);
 
@@ -218,7 +218,7 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#deleteById(Integer)}.
+     * Tests {@link LanguageServiceImpl#deleteById(Integer)}.
      */
     @Test
     public void deleteById_whereTvShowDoesNotExist() {
@@ -232,14 +232,14 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#deleteAllWithIds(Collection)}.
+     * Tests {@link LanguageServiceImpl#deleteAllWithIds(Collection)}.
      */
     @Test
     public void deleteAllWithIds() {
         List<Integer> ids = new ArrayList<>();
-        List<GenreEntity> expectedEntities = new ArrayList<>();
+        List<LanguageEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < RandomValueFactory.nextInt(20) + 1; i++) {
-            GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
+            LanguageEntity entity = IdentityEntityFactory.generateRandomLanguage();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -259,7 +259,7 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#deleteAllWithIds(Collection)}.
+     * Tests {@link LanguageServiceImpl#deleteAllWithIds(Collection)}.
      */
     @Test
     public void deleteAllWithIds_whereTvShowDoNotExist() {
@@ -276,14 +276,14 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#deleteAll()}.
+     * Tests {@link LanguageServiceImpl#deleteAll()}.
      */
     @Test
     public void deleteAll() {
         List<Integer> ids = new ArrayList<>();
-        List<GenreEntity> expectedEntities = new ArrayList<>();
+        List<LanguageEntity> expectedEntities = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
+            LanguageEntity entity = IdentityEntityFactory.generateRandomLanguage();
             expectedEntities.add(entity);
             ids.add(entity.getId());
         }
@@ -303,7 +303,7 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#deleteAll()}.
+     * Tests {@link LanguageServiceImpl#deleteAll()}.
      */
     @Test
     public void deleteAll_whereNoTvShowExist() {
@@ -315,7 +315,7 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#exists(Integer)}.
+     * Tests {@link LanguageServiceImpl#exists(Integer)}.
      */
     @Test
     public void exists_withId_exists() {
@@ -327,7 +327,7 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#exists(Integer)}.
+     * Tests {@link LanguageServiceImpl#exists(Integer)}.
      */
     @Test
     public void exists_withId_doesNotExist() {
@@ -339,11 +339,11 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#exists(String)}.
+     * Tests {@link LanguageServiceImpl#exists(String)}.
      */
     @Test
     public void exists_withName_exists() {
-        GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity entity = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.findByName(entity.getName())).thenReturn(entity);
 
@@ -351,11 +351,11 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Tests {@link GenreServiceImpl#exists(String)}.
+     * Tests {@link LanguageServiceImpl#exists(String)}.
      */
     @Test
     public void exists_withName_doesNotExist() {
-        GenreEntity entity = IdentityEntityFactory.generateRandomGenre();
+        LanguageEntity entity = IdentityEntityFactory.generateRandomLanguage();
 
         Mockito.when(repository.findByName(entity.getName())).thenReturn(null);
 
@@ -363,13 +363,13 @@ public class GenreServiceImplTest {
     }
 
     /**
-     * Asserts that the fields of a given <i>actual</i> {@link GenreEntity} match the fields of the
-     * <i>expected</i> {@link GenreEntity}.
+     * Asserts that the fields of a given <i>actual</i> {@link LanguageEntity} match the fields of
+     * the <i>expected</i> {@link LanguageEntity}.
      *
-     * @param actual the <i>actual</i> genre to be compared to the expected genre.
-     * @param expected the <i>expected</i> genre to be compared to the actual genre.
+     * @param actual the <i>actual</i> language to be compared to the expected language.
+     * @param expected the <i>expected</i> language to be compared to the actual language.
      */
-    private static void assertGenre(GenreEntity actual, GenreEntity expected) {
+    private static void assertLanguage(LanguageEntity actual, LanguageEntity expected) {
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isEqualTo(expected.getId());
         assertThat(actual.getName()).isEqualTo(expected.getName());

@@ -36,6 +36,7 @@ public final class TvShowEntityFactory {
                                                generateRandomNetwork(),
                                                IdentityEntityFactory.generateRandomRating(),
                                                IdentityEntityFactory.generateRandomGenre(),
+                                               IdentityEntityFactory.generateRandomLanguage(),
                                                generateRandomPlotSummary(),
                                                RandomValueFactory.nextBoolean());
         tvShow.setId(RandomValueFactory.nextIntId());
