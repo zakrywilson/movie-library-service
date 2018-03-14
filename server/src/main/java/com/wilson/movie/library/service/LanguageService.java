@@ -1,25 +1,25 @@
 package com.wilson.movie.library.service;
 
-import com.wilson.movie.library.domain.GenreEntity;
+import com.wilson.movie.library.domain.LanguageEntity;
 
 import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Outlines the implementation of a genre service.
+ * Outlines the implementation of a language service.
  *
  * @author Zach Wilson
  */
-public interface GenreService {
+public interface LanguageService {
 
-    GenreEntity create(GenreEntity genre);
+    LanguageEntity create(LanguageEntity language);
 
-    Optional<GenreEntity> getById(Integer id);
-    Optional<GenreEntity> getByName(String name);
-    Collection<GenreEntity> getAllWithIds(Collection<Integer> ids);
-    Collection<GenreEntity> getAll();
+    Optional<LanguageEntity> getById(Integer id);
+    Optional<LanguageEntity> getByName(String name);
+    Collection<LanguageEntity> getAllWithIds(Collection<Integer> ids);
+    Collection<LanguageEntity> getAll();
 
-    Optional<GenreEntity> update(Integer id, GenreEntity genre);
+    Optional<LanguageEntity> update(Integer id, LanguageEntity language);
 
     Optional<Integer> deleteById(Integer id);
     Collection<Integer> deleteAllWithIds(Collection<Integer> ids);

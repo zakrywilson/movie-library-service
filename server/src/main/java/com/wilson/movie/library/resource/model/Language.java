@@ -7,14 +7,14 @@ import lombok.Value;
 import lombok.experimental.Wither;
 
 /**
- * Immutable genre.
+ * Immutable language.
  *
  * @author Zach Wilson
  */
-@JsonRootName("genre")
+@JsonRootName("language")
 @Value
 @Builder
-public final class Genre {
+public final class Language {
 
     @JsonProperty("id")
     @Wither

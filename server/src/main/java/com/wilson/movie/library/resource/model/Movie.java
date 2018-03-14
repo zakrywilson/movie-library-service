@@ -50,6 +50,10 @@ public final class Movie {
     @Wither
     private final String genre;
 
+    @JsonProperty("language")
+    @Wither
+    private final String language;
+
     @JsonProperty("plotSummary")
     @Wither
     private final String plotSummary;

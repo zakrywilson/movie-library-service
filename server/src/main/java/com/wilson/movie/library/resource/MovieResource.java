@@ -1,10 +1,12 @@
 package com.wilson.movie.library.resource;
 
 import com.wilson.movie.library.domain.GenreEntity;
+import com.wilson.movie.library.domain.LanguageEntity;
 import com.wilson.movie.library.domain.MovieEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.resource.model.Movie;
 import com.wilson.movie.library.service.GenreService;
+import com.wilson.movie.library.service.LanguageService;
 import com.wilson.movie.library.service.MovieService;
 import com.wilson.movie.library.service.RatingService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +35,15 @@ public class MovieResource {
     private final MovieService movieService;
     private final RatingService ratingService;
     private final GenreService genreService;
+    private final LanguageService languageService;
 
     @Autowired
-    public MovieResource(MovieService movieService, RatingService ratingService, GenreService genreService) {
+    public MovieResource(MovieService movieService, RatingService ratingService, GenreService genreService,
+            LanguageService languageService) {
         this.movieService = movieService;
         this.ratingService = ratingService;
         this.genreService = genreService;
+        this.languageService = languageService;
     }
 
     @RequestMapping(method = POST)
@@ -59,8 +64,17 @@ public class MovieResource {
             return ResponseEntity.badRequest().build();
         }
 
-        MovieEntity createdMovie =
-                movieService.create(toMovie(movie, toRating(rating.get()), toGenre(genre.get())));
+        // Get the language
+        Optional<LanguageEntity> language = languageService.getByName(movie.getLanguage());
+        if (!language.isPresent()) {
+            log.debug("Cannot create movie: provided language does not exist: \"{}\"", movie.getLanguage());
+            return ResponseEntity.badRequest().build();
+        }
+
+        MovieEntity createdMovie = movieService.create(toMovie(movie,
+                                                               toRating(rating.get()),
+                                                               toGenre(genre.get()),
+                                                               toLanguage(language.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -164,8 +178,18 @@ public class MovieResource {
             return ResponseEntity.badRequest().build();
         }
 
+        // Get the language
+        Optional<LanguageEntity> language = languageService.getByName(movie.getLanguage());
+        if (!language.isPresent()) {
+            log.debug("Cannot update movie: provided language does not exist: \"{}\"", movie.getLanguage());
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<MovieEntity> optionalUpdatedMovie =
-                movieService.update(id, toMovie(movie, toRating(rating.get()), toGenre(genre.get())));
+                movieService.update(id, toMovie(movie,
+                                                toRating(rating.get()),
+                                                toGenre(genre.get()),
+                                                toLanguage(language.get())));
 
         if (optionalUpdatedMovie.isPresent()) {
             return ResponseEntity.noContent().build();

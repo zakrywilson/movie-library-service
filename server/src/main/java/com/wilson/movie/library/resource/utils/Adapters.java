@@ -1,13 +1,7 @@
 package com.wilson.movie.library.resource.utils;
 
-import com.wilson.movie.library.domain.GenreEntity;
-import com.wilson.movie.library.domain.MovieEntity;
-import com.wilson.movie.library.domain.RatingEntity;
-import com.wilson.movie.library.domain.TvShowEntity;
-import com.wilson.movie.library.resource.model.Genre;
-import com.wilson.movie.library.resource.model.Movie;
-import com.wilson.movie.library.resource.model.Rating;
-import com.wilson.movie.library.resource.model.TvShow;
+import com.wilson.movie.library.domain.*;
+import com.wilson.movie.library.resource.model.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,14 +35,16 @@ public final class Adapters {
                 .studio(movie.getStudio())
                 .rating(movie.getRating().getName())
                 .genre(movie.getGenre().getName())
+                .language(movie.getLanguage().getName())
                 .plotSummary(movie.getPlotSummary())
                 .notes(movie.getNotes())
                 .build();
     }
 
     @Nullable
-    public static MovieEntity toMovie(@Nullable Movie movie, @Nullable Rating rating, @Nullable Genre genre) {
-        if (movie == null || rating == null || genre == null) {
+    public static MovieEntity toMovie(@Nullable Movie movie, @Nullable Rating rating,
+            @Nullable Genre genre, @Nullable Language language) {
+        if (movie == null || rating == null || genre == null || language == null) {
             return null;
         }
 
@@ -57,6 +53,7 @@ public final class Adapters {
                                movie.getStudio(),
                                toRating(rating),
                                toGenre(genre),
+                               toLanguage(language),
                                movie.getPlotSummary(),
                                movie.getNotes());
     }
@@ -79,6 +76,7 @@ public final class Adapters {
                 .network(tvShow.getNetwork())
                 .rating(tvShow.getRating().getName())
                 .genre(tvShow.getGenre().getName())
+                .language(tvShow.getLanguage().getName())
                 .plotSummary(tvShow.getPlotSummary())
                 .series(tvShow.isSeries())
                 .build();
@@ -86,8 +84,8 @@ public final class Adapters {
 
     @Nullable
     public static TvShowEntity toTvShow(@Nullable TvShow tvShow, @Nullable Rating rating,
-            @Nullable Genre genre) {
-        if (tvShow == null || rating == null || genre == null) {
+            @Nullable Genre genre, @Nullable Language language) {
+        if (tvShow == null || rating == null || genre == null || language == null) {
             return null;
         }
 
@@ -96,6 +94,7 @@ public final class Adapters {
                                 tvShow.getNetwork(),
                                 toRating(rating),
                                 toGenre(genre),
+                                toLanguage(language),
                                 tvShow.getPlotSummary(),
                                 tvShow.isSeries());
     }
@@ -157,6 +156,33 @@ public final class Adapters {
     @Nonnull
     public static Collection<Genre> toGenres(@Nonnull Collection<GenreEntity> ratings) {
         return ratings.stream().map(Adapters::toGenre).collect(Collectors.toList());
+    }
+
+    @Nullable
+    public static Language toLanguage(@Nullable LanguageEntity rating) {
+        if (rating == null) {
+            return null;
+        }
+
+        return Language.builder()
+                .id(rating.getId())
+                .name(rating.getName())
+                .description(rating.getDescription())
+                .build();
+    }
+
+    @Nullable
+    public static LanguageEntity toLanguage(@Nullable Language rating) {
+        if (rating == null) {
+            return null;
+        }
+
+        return new LanguageEntity(rating.getName(), rating.getDescription());
+    }
+
+    @Nonnull
+    public static Collection<Language> toLanguages(@Nonnull Collection<LanguageEntity> ratings) {
+        return ratings.stream().map(Adapters::toLanguage).collect(Collectors.toList());
     }
 
 }

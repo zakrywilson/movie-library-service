@@ -1,8 +1,8 @@
 package com.wilson.movie.library.service.impl;
 
-import com.wilson.movie.library.domain.RatingEntity;
-import com.wilson.movie.library.repository.RatingRepository;
-import com.wilson.movie.library.service.RatingService;
+import com.wilson.movie.library.domain.LanguageEntity;
+import com.wilson.movie.library.repository.LanguageRepository;
+import com.wilson.movie.library.service.LanguageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,61 +16,61 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Rating service.
+ * Language service.
  *
  * @author Zach Wilson
  */
 @Service
 @Transactional
 @Slf4j
-public class RatingServiceImpl implements RatingService {
+public class LanguageServiceImpl implements LanguageService {
 
-    private final RatingRepository repository;
+    private final LanguageRepository repository;
 
     @Autowired
-    public RatingServiceImpl(RatingRepository repository) {
+    public LanguageServiceImpl(LanguageRepository repository) {
         this.repository = repository;
     }
 
     @Override
     @Nonnull
-    public RatingEntity create(@Nonnull RatingEntity rating) {
-        log.trace("Creating rating: {}", rating);
+    public LanguageEntity create(@Nonnull LanguageEntity language) {
+        log.trace("Creating language: {}", language);
 
-        RatingEntity savedEntity = repository.save(rating);
-        log.debug("Persisted new rating: {}", savedEntity);
+        LanguageEntity savedEntity = repository.save(language);
+        log.debug("Persisted new language: {}", savedEntity);
 
         return savedEntity;
     }
 
     @Override
     @Nonnull
-    public Optional<RatingEntity> getById(@Nonnull Integer id) {
-        log.trace("Getting rating by ID: {}", id);
+    public Optional<LanguageEntity> getById(@Nonnull Integer id) {
+        log.trace("Getting language by ID: {}", id);
 
         return Optional.ofNullable(repository.findOne(id));
     }
 
     @Override
     @Nonnull
-    public Optional<RatingEntity> getByName(@Nonnull String name) {
-        log.trace("Getting rating by name: \"{}\"", name);
+    public Optional<LanguageEntity> getByName(@Nonnull String name) {
+        log.trace("Getting language by name: \"{}\"", name);
 
         return Optional.ofNullable(repository.findByName(name));
     }
 
     @Override
     @Nonnull
-    public Collection<RatingEntity> getAllWithIds(@Nonnull Collection<Integer> ids) {
-        log.trace("Getting all rating by IDs: {}", ids);
+    public Collection<LanguageEntity> getAllWithIds(@Nonnull Collection<Integer> ids) {
+        log.trace("Getting all language by IDs: {}", ids);
 
         return repository.findAllById(ids);
     }
 
     @Override
     @Nonnull
-    public Collection<RatingEntity> getAll() {
-        log.trace("Getting all rating");
+    public Collection<LanguageEntity> getAll() {
+        log.trace("Getting all language");
 
         return repository.findAll();
     }
@@ -78,22 +78,22 @@ public class RatingServiceImpl implements RatingService {
     @Override
     @Nonnull
     @Transactional
-    public Optional<RatingEntity> update(@Nonnull Integer id, @Nonnull RatingEntity rating) {
-        log.trace("Updating rating with ID {}: {}", id, rating);
+    public Optional<LanguageEntity> update(@Nonnull Integer id, @Nonnull LanguageEntity language) {
+        log.trace("Updating language with ID {}: {}", id, language);
 
-        Optional<RatingEntity> optionalSavedEntity = Optional.empty();
+        Optional<LanguageEntity> optionalSavedEntity = Optional.empty();
 
-        Optional<RatingEntity> optionalCurrentEntity = Optional.ofNullable(repository.findOne(id));
+        Optional<LanguageEntity> optionalCurrentEntity = Optional.ofNullable(repository.findOne(id));
         if (optionalCurrentEntity.isPresent()) {
-            RatingEntity entity = optionalCurrentEntity.get();
-            entity.setName(rating.getName());
-            entity.setDescription(rating.getDescription());
+            LanguageEntity entity = optionalCurrentEntity.get();
+            entity.setName(language.getName());
+            entity.setDescription(language.getDescription());
 
             optionalSavedEntity = Optional.ofNullable(repository.save(entity));
 
-            optionalSavedEntity.ifPresent((e) -> log.debug("Persisted update to rating with ID {}: {}", id, e));
+            optionalSavedEntity.ifPresent((e) -> log.debug("Persisted update to language with ID {}: {}", id, e));
         } else {
-            log.debug("No rating exists with ID {}. Nothing to update", id);
+            log.debug("No language exists with ID {}. Nothing to update", id);
         }
 
         return optionalSavedEntity;
@@ -103,16 +103,16 @@ public class RatingServiceImpl implements RatingService {
     @Nonnull
     @Transactional
     public Optional<Integer> deleteById(@Nonnull Integer id) {
-        log.trace("Deleting rating by ID: {}", id);
+        log.trace("Deleting language by ID: {}", id);
 
-        Optional<RatingEntity> optionalEntity = Optional.ofNullable(repository.findOne(id));
+        Optional<LanguageEntity> optionalEntity = Optional.ofNullable(repository.findOne(id));
 
         if (optionalEntity.isPresent()) {
             repository.delete(id);
-            log.debug("Deleted rating with ID {}: {}", id, optionalEntity.get());
+            log.debug("Deleted language with ID {}: {}", id, optionalEntity.get());
             return Optional.of(id);
         } else {
-            log.debug("No rating exists with ID {}. Nothing to delete", id);
+            log.debug("No language exists with ID {}. Nothing to delete", id);
             return Optional.empty();
         }
     }
@@ -121,17 +121,17 @@ public class RatingServiceImpl implements RatingService {
     @Nonnull
     @Transactional
     public Collection<Integer> deleteAllWithIds(@Nonnull Collection<Integer> ids) {
-        log.trace("Deleting all rating by IDs: {}", ids);
+        log.trace("Deleting all language by IDs: {}", ids);
 
-        Collection<RatingEntity> entities = repository.findAllById(ids);
+        Collection<LanguageEntity> entities = repository.findAllById(ids);
         repository.deleteInBatch(entities);
 
-        Collection<Integer> deletedEntityIds = entities.stream().map(RatingEntity::getId).collect(Collectors.toSet());
+        Collection<Integer> deletedEntityIds = entities.stream().map(LanguageEntity::getId).collect(Collectors.toSet());
         if (log.isDebugEnabled()) {
             if (deletedEntityIds.size() <= 25) {
-                log.debug("Deleted {} rating with IDs: {}", deletedEntityIds.size(), deletedEntityIds);
+                log.debug("Deleted {} language with IDs: {}", deletedEntityIds.size(), deletedEntityIds);
             } else {
-                log.debug("Deleted {} rating", deletedEntityIds.size());
+                log.debug("Deleted {} language", deletedEntityIds.size());
             }
         }
 
@@ -142,17 +142,17 @@ public class RatingServiceImpl implements RatingService {
     @Nonnull
     @Transactional
     public Collection<Integer> deleteAll() {
-        log.trace("Deleting all rating");
+        log.trace("Deleting all language");
 
-        List<RatingEntity> entities = repository.findAll();
+        List<LanguageEntity> entities = repository.findAll();
         repository.deleteInBatch(entities);
 
-        Set<Integer> deletedEntityIds = entities.stream().map(RatingEntity::getId).collect(Collectors.toSet());
+        Set<Integer> deletedEntityIds = entities.stream().map(LanguageEntity::getId).collect(Collectors.toSet());
         if (log.isDebugEnabled()) {
             if (deletedEntityIds.size() <= 25) {
-                log.debug("Deleted all {} rating with IDs: {}", deletedEntityIds.size(), deletedEntityIds);
+                log.debug("Deleted all {} language with IDs: {}", deletedEntityIds.size(), deletedEntityIds);
             } else {
-                log.debug("Deleted all {} rating", deletedEntityIds.size());
+                log.debug("Deleted all {} language", deletedEntityIds.size());
             }
         }
 
@@ -161,14 +161,14 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public boolean exists(@Nonnull Integer id) {
-        log.trace("Checking if rating exists with ID: {}", id);
+        log.trace("Checking if language exists with ID: {}", id);
 
         return repository.exists(id);
     }
 
     @Override
     public boolean exists(@Nonnull String name) {
-        log.trace("Checking if rating exists with title: \"{}\"", name);
+        log.trace("Checking if language exists with title: \"{}\"", name);
 
         return Optional.ofNullable(repository.findByName(name)).isPresent();
     }

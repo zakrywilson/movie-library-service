@@ -9,15 +9,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 /**
- * Genre JPA entity.
+ * Language JPA entity.
  *
  * @author Zach Wilson
  */
-@Table(name = "GENRE")
-@Entity(name = "Genre")
+@Table(name = "LANGUAGE")
+@Entity(name = "Language")
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class GenreEntity {
+public class LanguageEntity {
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -30,11 +30,11 @@ public class GenreEntity {
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
 
-    public GenreEntity(@NotNull String name) {
+    public LanguageEntity(@NotNull String name) {
         this.name = name;
     }
 
-    public GenreEntity(@NotNull String name, @Null String description) {
+    public LanguageEntity(@NotNull String name, @Null String description) {
         this.name = name;
         this.description = description;
     }

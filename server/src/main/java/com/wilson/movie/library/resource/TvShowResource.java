@@ -1,10 +1,12 @@
 package com.wilson.movie.library.resource;
 
 import com.wilson.movie.library.domain.GenreEntity;
+import com.wilson.movie.library.domain.LanguageEntity;
 import com.wilson.movie.library.domain.RatingEntity;
 import com.wilson.movie.library.domain.TvShowEntity;
 import com.wilson.movie.library.resource.model.TvShow;
 import com.wilson.movie.library.service.GenreService;
+import com.wilson.movie.library.service.LanguageService;
 import com.wilson.movie.library.service.RatingService;
 import com.wilson.movie.library.service.TvShowService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +35,15 @@ public class TvShowResource {
     private final TvShowService tvShowService;
     private final RatingService ratingService;
     private final GenreService genreService;
+    private final LanguageService languageService;
 
     @Autowired
-    public TvShowResource(TvShowService tvShowService, RatingService ratingService, GenreService genreService) {
+    public TvShowResource(TvShowService tvShowService, RatingService ratingService,
+            GenreService genreService, LanguageService languageService) {
         this.tvShowService = tvShowService;
         this.ratingService = ratingService;
         this.genreService = genreService;
+        this.languageService = languageService;
     }
 
     @RequestMapping(method = POST)
@@ -59,8 +64,17 @@ public class TvShowResource {
             return ResponseEntity.badRequest().build();
         }
 
-        TvShowEntity createdTvShow =
-                tvShowService.create(toTvShow(tvShow, toRating(rating.get()), toGenre(genre.get())));
+        // Get the language
+        Optional<LanguageEntity> language = languageService.getByName(tvShow.getLanguage());
+        if (!language.isPresent()) {
+            log.debug("Cannot create TV show: provided language does not exist: \"{}\"", tvShow.getLanguage());
+            return ResponseEntity.badRequest().build();
+        }
+
+        TvShowEntity createdTvShow = tvShowService.create(toTvShow(tvShow,
+                                                                   toRating(rating.get()),
+                                                                   toGenre(genre.get()),
+                                                                   toLanguage(language.get())));
 
         return ResponseEntity.created(
                 ServletUriComponentsBuilder
@@ -164,8 +178,18 @@ public class TvShowResource {
             return ResponseEntity.badRequest().build();
         }
 
+        // Get the language
+        Optional<LanguageEntity> language = languageService.getByName(tvShow.getLanguage());
+        if (!language.isPresent()) {
+            log.debug("Cannot update TV show: provided language does not exist: \"{}\"", tvShow.getLanguage());
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<TvShowEntity> optionalUpdatedTvShow =
-                tvShowService.update(id, toTvShow(tvShow, toRating(rating.get()), toGenre(genre.get())));
+                tvShowService.update(id, toTvShow(tvShow,
+                                                  toRating(rating.get()),
+                                                  toGenre(genre.get()),
+                                                  toLanguage(language.get())));
 
         if (optionalUpdatedTvShow.isPresent()) {
             return ResponseEntity.noContent().build();
