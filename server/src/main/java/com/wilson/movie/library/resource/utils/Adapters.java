@@ -185,4 +185,38 @@ public final class Adapters {
         return ratings.stream().map(Adapters::toLanguage).collect(Collectors.toList());
     }
 
+    @Nullable
+    public static Person toPerson(@Nullable PersonEntity person) {
+        if (person == null) {
+            return null;
+        }
+
+        return Person.builder()
+                .id(person.getId())
+                .firstName(person.getFirstName())
+                .middleName(person.getMiddleName())
+                .lastName(person.getLastName())
+                .dateOfBirth(person.getDateOfBirth())
+                .dateOfDeath(person.getDateOfDeath())
+                .build();
+    }
+
+    @Nullable
+    public static PersonEntity toPerson(@Nullable Person person) {
+        if (person == null) {
+            return null;
+        }
+
+        return new PersonEntity(person.getFirstName(),
+                                person.getMiddleName(),
+                                person.getLastName(),
+                                person.getDateOfBirth(),
+                                person.getDateOfDeath());
+    }
+
+    @Nonnull
+    public static Collection<Person> toPersons(@Nonnull Collection<PersonEntity> persons) {
+        return persons.stream().map(Adapters::toPerson).collect(Collectors.toList());
+    }
+
 }
